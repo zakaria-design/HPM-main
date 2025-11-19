@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+/* Bootstrap 4 */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* AdminLTE 3 */
+@import "admin-lte/dist/css/adminlte.min.css";
+
+/* SweetAlert2 (opsional, jika ingin style bawaan) */
+@import "sweetalert2/dist/sweetalert2.min.css";
+
+
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+
+
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
