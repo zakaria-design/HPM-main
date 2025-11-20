@@ -9,7 +9,6 @@
 .git
 .gitignore
 .vercel
-.vercelignore
 composer.lock
 package-lock.json
 npm-debug.log
