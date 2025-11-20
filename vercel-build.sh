@@ -1,4 +1,9 @@
 #!/bin/bash
-composer install --no-dev --prefer-dist --optimize-autoloader
-npm install
+
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
 npm run build
+
+cp -R public public_build
