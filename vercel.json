@@ -13,6 +13,9 @@
   "buildCommand": "vite build",
   "outputDirectory": "public",
     "env": {
+        "buildCommand": "composer install && npm install && npm run build",
+        "outputDirectory": "public",
+        "framework": "laravel",
         "APP_ENV": "production",
         "APP_DEBUG": "false",
         "APP_URL": "https://hpm-manajement-surat.vercel.app",
