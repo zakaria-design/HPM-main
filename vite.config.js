@@ -16,5 +16,8 @@ export default defineConfig({
         alias: {
             jquery: 'jquery/src/jquery',
         },
-    }
+    },
+
+    // Tambahkan ini untuk hindari Mixed Content
+    base: '',
 });

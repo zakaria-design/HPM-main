@@ -3,19 +3,38 @@
 
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
-                <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h4 class="text-primary"><i class="fas fa-history"></i> @yield('title')</h4>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                     <li class="breadcrumb-item"><a href="#"><i class="fas fa-user-tie"></i> Pimpinan</a></li>
-                    <li class="breadcrumb-item active"><i class="fas fa-history"></i> @yield('title')</li>
-                    </ol>
-                </div>
+                <div class="row mb-2 align-items-center">
+
+                    <!-- Judul -->
+                    <div class="col-sm-6">
+                        <h4 class="text-primary">
+                            <i class="fas fa-history"></i> @yield('title')
+                        </h4>
+                    </div>
+
+                    <!-- Breadcrumb -->
+                    <div class="col-sm-6 d-flex justify-content-sm-end">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="#">
+                                        <i class="fas fa-user-tie"></i> Pimpinan
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <i class="fas fa-history"></i> @yield('title')
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+
                 </div>
             </div>
-    <section class="content">
+        </section>
+
+
+
+     <section class="content">
             <div>
         <!-- Default box -->
         <div>

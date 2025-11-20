@@ -1,21 +1,32 @@
 <div>
      <div id="content-wrapper" class="mb-5">
-
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
                 <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h4 class="text-primary"><i class="fas fa-history"></i> @yield('title')</h4>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#"><i class="fas fa-user-lock"></i> Admin</a></li>
-                    <li class="breadcrumb-item active"><i class="fas fa-history"></i> @yield('title')</li>
-                    </ol>
-                </div>
+                    <div class="col-sm-6">
+                        <h4 class="text-primary">
+                            <i class="fas fa-history me-1"></i>
+                            @yield('title')
+                        </h4>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item">
+                                <a href="#">
+                                    <i class="fas fa-user-lock"></i> Admin
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <i class="fas fa-history me-1"></i>
+                                @yield('title')
+                            </li>
+                        </ol>
+                    </div>
                 </div>
             </div>
         </section>
+
 
          <section class="content">
             <div>
