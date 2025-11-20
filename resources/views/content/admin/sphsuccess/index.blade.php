@@ -97,10 +97,23 @@
 @include('content.admin.sphsuccess.modal')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var detailModal = document.getElementById('detailModal')
+
+        function formatTanggal(rawDate) {
+            if (!rawDate) return "-";
+
+            const d = new Date(rawDate);
+
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+
+            return `${day}-${month}-${year}`;
+        }
+
+        var detailModal = document.getElementById('detailModal');
         detailModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget
-            var id = button.getAttribute('data-id')
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
 
             fetch(`/admin/sphsuccess/detail/${id}`)
                 .then(response => response.json())
@@ -110,10 +123,13 @@
                     document.getElementById('modalNominal').textContent = "Rp. " + parseFloat(data.nominal).toLocaleString('id-ID');
                     document.getElementById('modalUserName').textContent = data.user_name ?? '-';
                     document.getElementById('modalStatus').textContent = data.status ?? 'Success';
-                    document.getElementById('modalCreatedAt').textContent = data.created_at;
-                    document.getElementById('modalUpdatedAt').textContent = data.updated_at;
+
+                    // Ubah format tanggal
+                    document.getElementById('modalCreatedAt').textContent = formatTanggal(data.created_at);
+                    document.getElementById('modalUpdatedAt').textContent = formatTanggal(data.updated_at);
                 })
                 .catch(err => console.error(err));
         });
     });
 </script>
+

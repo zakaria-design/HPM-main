@@ -99,10 +99,23 @@
 @include('content.pimpinan.sphsuccess.modal')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var detailModal = document.getElementById('detailModal')
+
+        function formatTanggal(rawDate) {
+            if (!rawDate) return "-";
+
+            const dateObj = new Date(rawDate);
+
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            return `${day}-${month}-${year}`;
+        }
+
+        var detailModal = document.getElementById('detailModal');
         detailModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget
-            var id = button.getAttribute('data-id')
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
 
             fetch(`/pimpinan/sphsuccess/detail/${id}`)
                 .then(response => response.json())
@@ -112,8 +125,10 @@
                     document.getElementById('modalNominal').textContent = "Rp. " + parseFloat(data.nominal).toLocaleString('id-ID');
                     document.getElementById('modalUserName').textContent = data.user_name ?? '-';
                     document.getElementById('modalStatus').textContent = data.status ?? 'Success';
-                    document.getElementById('modalCreatedAt').textContent = data.created_at;
-                    document.getElementById('modalUpdatedAt').textContent = data.updated_at;
+
+                    // Ubah FORMAT tanggal di sini
+                    document.getElementById('modalCreatedAt').textContent = formatTanggal(data.created_at);
+                    document.getElementById('modalUpdatedAt').textContent = formatTanggal(data.updated_at);
                 })
                 .catch(err => console.error(err));
         });

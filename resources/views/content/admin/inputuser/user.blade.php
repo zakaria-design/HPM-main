@@ -33,10 +33,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Role</label>
                                 <select name="role" class="form-select" required>
-                                    <option value="direktur">Direktur</option>
                                     <option value="manager">Manager</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="karyawan" selected>Karyawan</option>
                                 </select>
                             </div>
 

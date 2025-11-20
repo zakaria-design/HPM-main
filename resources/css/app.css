@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 /* Bootstrap 4 */
-@import "bootstrap/dist/css/bootstrap.min.css";
+/* @import "bootstrap/dist/css/bootstrap.min.css"; */
 
 /* AdminLTE 3 */
 @import "admin-lte/dist/css/adminlte.min.css";

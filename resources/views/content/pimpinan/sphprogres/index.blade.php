@@ -127,11 +127,28 @@
 <script>
     const detailModal = document.getElementById('detailModal');
     detailModal.addEventListener('show.bs.modal', event => {
-        const button = event.relatedTarget; // tombol yang diklik
+
+        const button = event.relatedTarget;
+
+        // Ambil tanggal asli
+        let rawDate = button.getAttribute('data-tanggal'); 
+        let formattedDate = rawDate;
+
+        // Jika formatnya 2025-11-21 atau 2025-11-21 12:30:00
+        if (rawDate) {
+            const dateObj = new Date(rawDate);
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+
+            formattedDate = `${day}-${month}-${year}`;
+        }
+
         document.getElementById('modal-id').textContent = button.getAttribute('data-id');
         document.getElementById('modal-nama').textContent = button.getAttribute('data-nama');
-        document.getElementById('modal-tanggal').textContent = button.getAttribute('data-tanggal');
+        document.getElementById('modal-tanggal').textContent = formattedDate;
         document.getElementById('modal-user').textContent = button.getAttribute('data-user');
         document.getElementById('modal-keterangan').textContent = button.getAttribute('data-keterangan');
     });
 </script>
+
