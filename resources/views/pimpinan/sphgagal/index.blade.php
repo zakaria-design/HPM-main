@@ -5,5 +5,5 @@
 @section('menuPimpinanSphGagal','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.sphgagal.index')
+    @include('content.pimpinan.sphgagal.index')
 @endsection

@@ -5,6 +5,6 @@
 @section('menuAdminSphGagal','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('admin.sphgagal.index')
+    @include('content.admin.sphgagal.index')
 @endsection
 

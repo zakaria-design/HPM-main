@@ -1,87 +1,74 @@
-<div wire:ignore.self class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <!-- HEADER -->
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="userModalLabel">Tambah User Baru</h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+{{-- Modal Tambah User --}}
+    <div class="modal fade" id="modalTambahUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow">
 
-            <!-- BODY -->
-            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
-                <form wire:submit.prevent="save">
-                    <!-- Nama -->
-                    <div class="form-group">
-                        <label>Nama Lengkap</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" wire:model.defer="name">
-                        @error('name') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Form Tambah User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form action="{{ route('admin.inputuser.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Nama Lengkap</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Role</label>
+                                <select name="role" class="form-select" required>
+                                    <option value="direktur">Direktur</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="karyawan" selected>Karyawan</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Alamat</label>
+                                <input type="text" name="alamat" class="form-control">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Nomor HP</label>
+                                <input type="text" name="no_hp" class="form-control">
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-semibold">Foto (Opsional/boleh kosong)</label>
+                                <input type="file" name="foto" class="form-control">
+                                <small class="text-muted">Format: jpg, jpeg, png | Maks 2MB</small>
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <!-- Email -->
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" wire:model.defer="email">
-                        @error('email') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary small btn-sm" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary small btn-sm">Simpan User</button>
                     </div>
 
-                    <!-- Alamat -->
-                    <div class="form-group">
-                        <label>Alamat</label>
-                        <textarea class="form-control @error('alamat') is-invalid @enderror" wire:model.defer="alamat" rows="3"></textarea>
-                        @error('alamat') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
-                    </div>
-
-                    <!-- No HP -->
-                    <div class="form-group">
-                        <label>No HP</label>
-                        <input type="text" class="form-control @error('no_hp') is-invalid @enderror" wire:model.defer="no_hp">
-                        @error('no_hp') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
-                    </div>
-
-                    <!-- Role -->
-                    <div class="form-group">
-                        <label>Role</label>
-                        <select class="form-control @error('role') is-invalid @enderror" wire:model.defer="role">
-                            <option value="">-- Pilih Role --</option>
-                            <option value="manager">Manager</option>
-                        </select>
-                        @error('role') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
-                    </div>
-
-                    <!-- Password -->
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" wire:model.defer="password">
-                        @error('password') 
-                            <small class="text-danger">{{ $message }}</small> 
-                        @enderror
-                    </div>
-
-                    <!-- Konfirmasi Password -->
-                    <div class="form-group">
-                        <label>Konfirmasi Password</label>
-                        <input type="password" class="form-control" wire:model.defer="password_confirmation">
-                    </div>
                 </form>
-            </div>
 
-            <!-- FOOTER -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-success" wire:click="save">Simpan</button>
             </div>
         </div>
     </div>
+
 </div>

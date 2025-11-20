@@ -5,5 +5,5 @@
 @section('menuPimpinanSphSuccess','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.sphsuccess.index')
+    @include('content.pimpinan.sphsuccess.index')
 @endsection

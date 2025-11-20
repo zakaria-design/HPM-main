@@ -5,5 +5,5 @@
 @section('menuPimpinanDashboard','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.dashboard.index')
+    @include('content.pimpinan.dashboard.index')
 @endsection

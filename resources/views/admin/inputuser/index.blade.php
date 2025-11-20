@@ -6,6 +6,6 @@
 @section('menuAdminInputUser','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('admin.inputuser.index')
+    @include('content.admin.inputuser.index')
 @endsection
 

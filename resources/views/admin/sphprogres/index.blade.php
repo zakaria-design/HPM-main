@@ -5,6 +5,6 @@
 @section('menuAdminSphProgres','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('admin.sphprogres.index')
+    @include('content.admin.sphprogres.index')
 @endsection
 

@@ -6,6 +6,6 @@
 @section('menuAdminDashboard','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('admin.dashboard.index')
+    @include('content.admin.dashboard.index')
 @endsection
 

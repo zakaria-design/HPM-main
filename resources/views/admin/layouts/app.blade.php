@@ -5,30 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HPM | @yield('title')</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-      
-        <!-- Bootstrap 5 -->
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        <!-- SweetAlert2 CSS -->
+    <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
+
+        <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Boxicons -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-    <!-- Font Awesome 5 Free -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.5/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKB4Imkb9aI6/6eB7f/7uCvzF9lOzDqY0h+0Bkfj1T8m0LZB4n9Z6cIxh+WxuJ4iN0B2kz5+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 
     <style>
         body {
@@ -173,7 +167,7 @@
     {{-- semua link --}}
     @include('admin.layouts.style')
 
-    @livewireStyles
+    {{-- @livewireStyles --}}
   
 </head>
 <body>
@@ -190,8 +184,7 @@
 {{-- footer --}}
     @include('admin.layouts.footer')
 
-    @livewireScripts
-
+{{-- navigasi side bar --}}
 <script>
         document.addEventListener('livewire:navigated', sidebarInit);
         document.addEventListener('DOMContentLoaded', sidebarInit);
@@ -215,6 +208,30 @@
             }
         }
 </script>
+
+{{-- sweet alert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            showConfirmButton: true,
+        });
+    @endif
+
+    @if (session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '{{ session('error') }}',
+            showConfirmButton: true,
+        });
+    @endif
+</script>
+
+{{-- bootstrap --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> 
 </body>
 </html>

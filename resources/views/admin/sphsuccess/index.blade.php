@@ -5,6 +5,6 @@
 @section('menuAdminSphSuccess','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('admin.sphsuccess.index')
+    @include('content.admin.sphsuccess.index')
 @endsection
 

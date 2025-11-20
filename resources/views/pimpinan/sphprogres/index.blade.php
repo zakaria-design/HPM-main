@@ -5,5 +5,5 @@
 @section('menuPimpinanSphProgres','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.sphprogres.index')
+    @include('content.pimpinan.sphprogres.index')
 @endsection

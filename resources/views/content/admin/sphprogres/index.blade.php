@@ -1,5 +1,5 @@
 <div>
-     <div id="content-wrapper">
+     <div id="content-wrapper" class="mb-5">
 
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
@@ -17,113 +17,89 @@
             </div>
         </section>
 
-        <section class="content-header">
+         <section class="content">
             <div>
-                <div class="d-flex justify-content-between mb-3 pl-4">
-                    <input wire:model.live="search" type="text" class="form-control w-25" placeholder="Cari Customer...">
+        <!-- Default box -->
+        <div>
+            {{-- card --}}
+            <div>
+                <div class="d-flex justify-content-between">
+                {{-- dropdown jenis surat --}}
+                <div class="">
+                    <div class=" mb-3 ml-3">
+                        <form action="" method="GET" class="input-group">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                value="{{ request('search') }}"
+                                placeholder="cari nama customer..." 
+                                class="form-control"
+                                autocomplete="off">
+
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
+                </div>
+                {{-- table --}}
                 <div class="table-responsive">
-                <table class="table table-hover align-middle text-nowrap data-table">
-                    <thead>
-                        <tr>
-                            <th class="ps-5">No</th>
-                            <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor Surat</th>
-                            <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                            <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
-                            <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($data as $item)
+                    <table class="table table-hover align-middle text-nowrap">
+                        <thead>
                             <tr>
-                                <td class="ps-5 small">{{ ($data->currentPage() - 1) * $data->perPage() + $loop->index + 1 }}</td>
-                                <td class="small">{{ $item->nomor_surat }}</td>
-                                <td class="small">{{ $item->nama_customer }}</td>
-                                <td class="small">Rp.{{ number_format($item->nominal, 0, ',', '.') }}</td>
-                                <td>
-                                    <div class="d-flex justify-content-center align-items-center gap-2 ms-n4" style="margin-left: -14px;">
-                                        <button class="btn btn-sm btn-outline-info" 
-                                            wire:click="showDetail({{ $item->id }})" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailModal">
-                                            <i class="fas fa-info-circle"></i>
-                                        </button>
-                                            
-                                            <span class="text-muted small">|</span>
-                                            
-                                            <button wire:click="tolak({{ $item->id }})"
-                                                    class="btn btn-outline-danger d-flex align-items-center justify-content-center rounded-circle"
-                                                    style="width: 32px; height: 32px;" title="Tolak">
+                                <th class="ps-4">No</th>
+                                <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
+                                <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
+                                <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
+                                <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
+                                <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($data as $index => $row)
+                                <tr>
+                                    <td class="ps-4 small">{{ $index+1 }}</td>
+                                    <td class="small">{{ $row->nomor_surat }}</td>
+                                    <td class="small">{{ $row->nama_customer }}</td>
+                                    <td class="small"> 
+                                        @if($row->nominal)
+                                            Rp {{ number_format($row->nominal, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="small">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') }}</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center align-items-center gap-2 ms-n4" style="margin-left: -14px;">
+                                            <a href="{{ route('admin.surat.gagal', $row->id) }}" class="btn btn-outline-danger d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px;" title="tandai gagal">
                                                 <i class="fas fa-times"></i>
-                                            </button>
+                                            </a>
 
                                             <span class="text-muted small">|</span>
 
-                                            <button wire:click="setujui({{ $item->id }})"
-                                                    class="btn btn-outline-success d-flex align-items-center justify-content-center rounded-circle"
-                                                    style="width: 32px; height: 32px;" title="Setujui">
+                                            <a href="{{ route('admin.surat.berhasil', $row->id) }}" class="btn btn-outline-success d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px;" title="tandai berhasil">
                                                 <i class="fas fa-check"></i>
-                                            </button>
+                                            </a>
                                         </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Tidak ada data</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-                </div>
-                <div class="mt-2">
-                    {{ $data->links() }}
-                </div>
+                                    </td>
+
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Belum ada surat.</td>
+                                </tr>
+                            @endforelse 
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <div class="mt-3">
+                        {{-- {{ $dataSurat->links() }} --}}
+                    </div>
+                </div>    
             </div>
-        </section>
+        </div>  
+    </section>
 
-        @include('livewire.admin.sphprogres.modal')
-        @script
-        <script>
-            Livewire.on('showDetailModal', () => {
-                const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-                modal.show();
-            });
-        </script>
-        @endscript
-
-        {{-- notifikasi dispatch --}}
-    @script
-    <script>
-        // Tutup modal setelah simpan
-            $wire.on('closeModal', () => {
-                $('#pengajuanModal').modal('hide');
-            });
-
-            // SweetAlert feedback
-            $wire.on('showSuccess', data => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: data.message,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
-                    showConfirmButton: true, 
-                    allowOutsideClick: true, 
-                });
-            });
-
-            Livewire.on('showError', (data) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'gagall!',
-                    text: data.message,
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6',
-                    showConfirmButton: true, 
-                    allowOutsideClick: true, 
-                });
-            });
-    </script>
-    @endscript
     </div>
 </div>

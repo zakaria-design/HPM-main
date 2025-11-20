@@ -1,5 +1,5 @@
 <div>
-    <div id="content-wrapper">
+    <div id="content-wrapper" class="mb-5">
          <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -17,78 +17,107 @@
         </section>
 
 
-        <section class="content">
-            
+            <section class="content">
+        <div>
       <!-- Default box -->
       <div>
+        <div>
+
+        </div>
         {{-- card --}}
         <div class="card-body">
-            <div class="mb-3 d-flex justify-content-between">
-              {{-- dropdown jenis surat --}}
-              <div class="col-md-3">
-                  <select wire:model.live="jenis" class="form-select">
-                      <option value="semua">Semua Jenis</option>
-                      <option value="surat penawaran harga">Surat Penawaran Harga</option>
-                      <option value="surat invoice">Surat Invoice</option>
-                      <option value="surat keterangan">Surat Keterangan</option>
-                  </select>
-              </div>
-              {{-- akhir --}}
-                {{-- drop down paginate --}}
-                <div class="col-md-4">
-                    <select wire:model.live="kategori" class="form-select">
-                        <option value="semua">Semua</option>
-                        <option value="perusahaan">Surat Perusahaan</option>
-                        <option value="perorangan">Surat Perorangan</option>
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-3">
+
+            {{-- KIRI: Filter + dropdown --}}
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
+
+                <span class="fw-bold">Filter:</span>
+
+                {{-- Dropdown Jenis Surat --}}
+                <form method="GET" action="" class="w-100 w-md-auto">
+                    <select name="jenis" class="form-select" onchange="this.form.submit()">
+                        <option value="semua" {{ $jenis == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
+                        <option value="SPH" {{ $jenis == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
+                        <option value="INV" {{ $jenis == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
+                        <option value="SKT" {{ $jenis == 'SKT' ? 'selected' : '' }}>Surat Keterangan</option>
                     </select>
-                </div>
-                {{-- pencarian --}}
-                <div class="col-4">
-                    {{-- dummy --}}
-                    <input type="text" style="display:none">
-                    <input type="password" style="display:none">
-                    {{-- dummy --}}
-                    <input wire:model.live="search" type="text"   name="dont_autofill_this_chrome" id="fake_search" placeholder="cari nama customer..." class="form-control" autocomplete="new-password">
-                </div>
+                </form>
+
+                {{-- Dropdown Kategori --}}
+                <form method="GET" action="" class="w-100 w-md-auto">
+                    <select name="kategori" class="form-select" onchange="this.form.submit()">
+                        <option value="semua" {{ ($kategori ?? 'semua') == 'semua' ? 'selected' : '' }}>Semua</option>
+                        <option value="perusahaan" {{ ($kategori ?? '') == 'perusahaan' ? 'selected' : '' }}>Surat Perusahaan</option>
+                        <option value="perorangan" {{ ($kategori ?? '') == 'perorangan' ? 'selected' : '' }}>Surat Perorangan</option>
+                    </select>
+                </form>
+
             </div>
+
+            {{-- KANAN: Pencarian --}}
+            <div class="w-100 w-md-25">
+                <form action="" method="GET" class="input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ request('search') }}"
+                        placeholder="cari nama customer..." 
+                        class="form-control"
+                        autocomplete="off">
+
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
             {{-- table --}}
             <div class="table-responsive">
-                <table class="table table-hover align-middle text-nowrap data-table"> 
-                    <thead>
-                        <tr>
-                            <th class="ps-4">No</th>
-                            <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
-                            <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                            <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis Surat</th>
-                            <th><i class="fas fa-tools mr-1 text-primary"></i>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($dataSurat as $i => $item)
+                <table class="table table-hover align-middle text-nowrap">
+                        <thead>
                             <tr>
-                                <td class="ps-4 small">{{ $dataSurat->firstItem() + $i }}</td>
-                                <td class="small">{{ $item->nomor_surat }}</td>
-                                <td class="small">{{ $item->nama_customer }}</td>
-                                <td class="small">{{ ucwords($item->jenis_surat) }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-info"
-                                            wire:click="showDetail('{{ $item->nomor_surat }}', '{{ $item->jenis_surat }}')">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                </td>
-
+                                <th class="ps-4">No</th>
+                                <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
+                                <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
+                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis Surat</th>
+                                <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
+                                <th><i class="fas fa-tools mr-1 mr-1 text-primary"></i> Aksi</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Belum ada surat.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($surat as $p)
+                                <tr>
+                                    <td class="ps-4 small">{{ $loop->iteration + ($surat->currentPage()-1) * $surat->perPage() }}</td>
+                                    <td class="small">{{ $p->nomor_surat }}</td>
+                                    <td class="small">{{ $p->nama_customer }}</td>
+                                    <td class="small">{{ ucwords($p->jenis) }}</td>
+                                    <td class="small">
+                                        @if($p->nominal)
+                                            Rp {{ number_format($p->nominal, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-info"
+                                            onclick='showDetail(@json($p))'>
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                    </td>
 
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Belum ada surat.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                   <!-- Pagination -->
                 <div class="mt-3">
-                    {{ $dataSurat->links() }}
+                    {{ $surat->links('pagination::bootstrap-5') }}
                 </div>
             </div>    
         </div>
@@ -96,7 +125,40 @@
     </section>
         
 
-    @include('livewire.admin.daftarsurat.allsurat')
+
 
      </div>
 </div>
+@include('content.admin.daftarsurat.modal')
+{{-- modal detail surat --}}
+<script>
+    function showDetail(data) {
+
+        document.getElementById('d_jenis').innerHTML = data.jenis;
+        document.getElementById('d_customer').innerHTML = data.nama_customer;
+        document.getElementById('d_nomor').innerHTML = data.nomor_surat;
+        // Format nominal: 1000000 => 1.000.000
+        let nominalFormatted = data.nominal 
+            ? new Intl.NumberFormat('id-ID').format(data.nominal)
+            : '-';
+
+        document.getElementById('d_nominal').innerHTML = nominalFormatted;
+
+        let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
+        document.getElementById('d_created').innerHTML = tgl;
+
+        // Tambahkan nama user
+        document.getElementById('d_user').innerHTML = data.user_name ?? '-';
+
+        let tglUpdate = data.updated_at 
+            ? new Date(data.updated_at).toLocaleDateString('id-ID')
+            : '-';
+
+        document.getElementById('d_updated').innerHTML = tglUpdate;
+
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
+    }
+
+</script>
+
+

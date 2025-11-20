@@ -1,55 +1,37 @@
-<div wire:ignore.self class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog modal-md modal-dialog-centered">
-        <div class="modal-content">
-            {{-- Header --}}
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title">Detail Surat</h5>
-                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-            </div>
+<!-- Modal Bootstrap 5 -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white small">
+        <h5 class="modal-title" id="detailModalLabel">Detail Customer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-grid gap-2" style="grid-template-columns: 130px 20px 1fr; align-items: center; row-gap: 8px;">
+          <div class="text-start fw-bold">Nomor Surat</div>
+          <div class="text-center fw-bold">:</div>
+          <div class="text-start"><span id="modal-id"></span></div>
 
-            {{-- Body --}}
-            <div class="modal-body px-4" style="max-height: 60vh; overflow-y: auto;">
-                @if($selectedSurat)
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">Nomor Surat</div>
-                        <div class="col-7">: {{ $selectedSurat->nomor_surat ?? '-' }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">Nama Customer</div>
-                        <div class="col-7">: {{ $selectedSurat->nama_customer ?? '-' }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">Nominal</div>
-                        <div class="col-7">: Rp. {{ isset($selectedSurat->nominal) ? number_format($selectedSurat->nominal, 0, ',', '.') : '-' }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">User</div>
-                        <div class="col-7">: 
-                            @php
-                                $user = \App\Models\User::where('user_id', $selectedSurat->user_id)->first();
-                            @endphp
-                            {{ $user ? $user->name : '-' }}
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">Dibuat</div>
-                        <div class="col-7">: {{ isset($selectedSurat->created_at) ? \Carbon\Carbon::parse($selectedSurat->created_at)->format('d-m-Y H:i') : '-' }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-5 font-weight-bold">Status</div>
-                        <div class="col-7 mb-2">: <span class="bg-dark text-warning px-2 py-1 rounded-lg">In Progress</span>
-                        </div>
-                    </div>
-                @else
-                    <p class="text-center">Loading.....</p>
-                @endif
-            </div>
+          <div class="text-start fw-bold">Nama Customer</div>
+          <div class="text-center fw-bold">:</div>
+          <div class="text-start"><span id="modal-nama"></span></div>
 
-            {{-- Footer --}}
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <div class="text-start fw-bold">Tanggal Input</div>
+          <div class="text-center fw-bold">:</div>
+          <div class="text-start"><span id="modal-tanggal"></span></div>
 
-            </div>
+          <div class="text-start fw-bold">User</div>
+          <div class="text-center fw-bold">:</div>
+          <div class="text-start"><span id="modal-user"></span></div>
+
+          <div class="text-start fw-bold">Keterangan</div>
+          <div class="text-center fw-bold">:</div>
+          <div class="text-start"><span id="modal-keterangan"></span></div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm small" data-bs-dismiss="modal">Tutup</button>
+      </div>
     </div>
+  </div>
 </div>

@@ -19,9 +19,21 @@
 
           <section class="content-header">
             <div>
-                <div class="d-flex justify-content-between mb-3 pl-3">
-                    <input wire:model.live="search" type="text" class="form-control w-25" placeholder="Cari Customer...">
-                </div>
+                <div class=" mb-3 ml-3 col-10 col-md-4">
+                        <form action="" method="GET" class="input-group">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                value="{{ request('search') }}"
+                                placeholder="cari nama customer..." 
+                                class="form-control"
+                                autocomplete="off">
+
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </form>
+                    </div>
                 <div class="table-responsive">
                  <table class="table table-hover align-middle text-nowrap data-table">
                     <thead>
@@ -32,15 +44,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($clients as $i => $client)
+                        @forelse($uniqueCustomers as $index => $client)
                             <tr>
-                                <td class="ps-5 small">{{ $i + 1 }}</td>
-                                <td class="small">{{ $client['nama_customer'] }}</td>
-                                <td class="small">
-                                    @foreach($client['jenis_surat'] as $jenis)
-                                        <span class="badge badge-info mr-1">{{ $jenis }}</span>
+                                <td class="ps-5 small">{{ $index + 1 }}</td>
+                                <td class="small">{{ $client->nama_customer }}</td>
+                                <td class="small fw-bold">
+                                    @foreach(explode(',', $client->jenis) as $jenis)
+                                        @php 
+                                            $jenis = trim($jenis); 
+                                            $color = match($jenis) {
+                                                'SPH' => 'text-success',   // hijau
+                                                'SKT' => 'text-danger',    // merah
+                                                'INV' => 'text-warning',   // kuning
+                                                default => 'text-secondary'
+                                            };
+                                        @endphp
+                                        
+                                        <span class="{{ $color }}">{{ $jenis }}</span>
+                                        @if(!$loop->last), @endif
                                     @endforeach
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
@@ -50,7 +74,7 @@
                     </tbody>
                 </table>
                 <div class="mt-2">
-                     {{ $clients->links('vendor.pagination.dots') }}
+                     {{-- {{ $clients->links('vendor.pagination.dots') }} --}}
                 </div>
             </div>
         </section>

@@ -4,7 +4,7 @@
             <div class="bg-white p-4 rounded shadow-sm">
                 <section class="content-header">
             <h4 class="mr-4 pl-2">
-                Welcome 🖐🖐 <span class="text-primary">{{ Auth::user()->name }}</span>
+                Selamat Datang 🖐🖐 <span class="text-primary">{{ Auth::user()->name }}</span>
             </h4>
         </section>
 
@@ -108,5 +108,5 @@ const suratBarChart = new Chart(document.getElementById('suratBarChart'), {
         }
     }
 });
-</script>
+ </script>
 

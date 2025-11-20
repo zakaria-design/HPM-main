@@ -5,5 +5,5 @@
 @section('menuPimpinanDaftarSurat','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.daftarsurat.index')
+    @include('content.pimpinan.daftarsurat.index')
 @endsection

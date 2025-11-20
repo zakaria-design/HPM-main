@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DaftarSuratController;
+use App\Http\Controllers\Admin\SphGagalController;
+use App\Http\Controllers\Admin\InputUserController;
+use App\Http\Controllers\Admin\SphSuccessController;
+use App\Http\Controllers\Pimpinan\ClientsController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\PengajuanController;
 use App\Http\Controllers\Manager\UpdateSuratController;
@@ -12,13 +16,6 @@ Route::get('/', function () {
     return view('auth.landing');
 });
 
-
-// rute superadmin
-// Route::view('superadmin/user/index','superadmin.user.index')->name('superadmin.user.index');
-
-
-// contoh memanggil middle =ware alias
-// Route::resource('users', UserController::class)->middleware('isSuperAdmin');
 
 
 // Login routes
@@ -54,19 +51,6 @@ Route::middleware(['auth', 'isManager'])->group(function () {
 
 });
 
-    // // Route untuk menampilkan halaman (GET request)
-    // Route::get('/manager/pengajuan/index', [PengajuanController::class, 'index'])->name('manager.pengajuan.index');
-
-    // // Route untuk menyimpan pengajuan (POST request)
-    // Route::post('/manager/pengajuan/index', [PengajuanController::class, 'store'])->name('manager.pengajuan.store');
-
-
-    // // Route::view('manager/pengajuan/index', 'manager.pengajuan.index')->name('manager.pengajuan.index');
-    // Route::view('manager/daftarsurat/index','manager.daftarsurat.index')->name('manager.daftarsurat.index');
-    // Route::view('manager/updatesurat/index','manager.updatesurat.index')->name('manager.updatesurat.index');
-    // Route::view('manager/presensi/index','manager.presensi.index')->name('manager.presensi.index');
-    // Route::get('/daftar-surat/export-pdf', [App\Http\Controllers\DaftarsuratController::class, 'exportPdf'])->name('daftarsurat.exportPdf');
-
 
 // profile
 Route::middleware(['auth'])->group(function () {
@@ -76,27 +60,48 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
-
 // Admin routes
 Route::middleware(['auth', 'isAdmin'])->group(function () {
-    Route::view('/admin/dashboard/index', 'admin.dashboard.index')->name('admin.dashboard.index');
-    Route::view('/admin/inputuser/index', 'admin.inputuser.index')->name('admin.inputuser.index');
-    Route::view('/admin/daftarsurat/index', 'admin.daftarsurat.index')->name('admin.daftarsurat.index');
-    Route::view('/admin/presensi/index', 'admin.presensi.index')->name('admin.presensi.index');
-    Route::view('/admin/sphprogres/index', 'admin.sphprogres.index')->name('admin.sphprogres.index');
-     Route::view('admin/updatesurat/index','admin.updatesurat.index')->name('admin.updatesurat.index');
-    Route::view('/admin/sphgagal/index', 'admin.sphgagal.index')->name('admin.sphgagal.index');
-    Route::view('/admin/sphsuccess/index', 'admin.sphsuccess.index')->name('admin.sphsuccess.index');
+    // dashboard
+    Route::get('admin/dashboard/index', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard.index');
+    // input user
+    Route::get('/admin/input-user', [InputUserController::class, 'index'])->name('admin.inputuser.index');
+    Route::post('/admin/input-user/store', [InputUserController::class, 'store'])->name('admin.inputuser.store');
+    Route::delete('/admin/input-user/delete/{id}', [InputUserController::class, 'destroy'])->name('admin.user.delete');
+    // Daftar Surat
+    Route::get('admin/daftarsurat', [\App\Http\Controllers\Admin\DaftarSuratController::class, 'index'])->name('admin.daftarsurat.index');
+    // update surat
+    Route::get('admin/sph-progres', [App\Http\Controllers\Admin\UpdateSuratController::class, 'index'])->name('admin.sphprogres.index');
+    Route::get('admin/sph-progres/gagal/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'gagal'])->name('admin.surat.gagal');
+    Route::get('admin/sph-progres/berhasil/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'berhasil'])->name('admin.surat.berhasil');
+    // sph success
+    Route::get('admin/sphsuccess', [SphSuccessController::class, 'index'])->name('admin.sphsuccess.index');
+    Route::get('admin/sphsuccess/detail/{id}', [SphSuccessController::class, 'detail'])->name('admin.sphsuccess.detail');
+    // sph gagal
+    Route::get('admin/sphgagal', [SphGagalController::class, 'index'])->name('admin.sphgagal.index');
+    Route::get('admin/sphgagal/detail/{id}', [SphGagalController::class, 'detail'])->name('admin.sphgagal.detail');
+
 });
 
 // Pimpinan routes
 Route::middleware(['auth', 'isDirektur'])->group(function () {
-    Route::view('/pimpinan/dashboard/index', 'pimpinan.dashboard.index')->name('pimpinan.dashboard.index');
-    Route::view('/pimpinan/clients/index', 'pimpinan.clients.index')->name('pimpinan.clients.index');
-    Route::view('/pimpinan/daftarsurat/index', 'pimpinan.daftarsurat.index')->name('pimpinan.daftarsurat.index');
-    Route::view('/pimpinan/presensi/index', 'pimpinan.presensi.index')->name('pimpinan.presensi.index');
-    Route::view('/pimpinan/sphprogres/index', 'pimpinan.sphprogres.index')->name('pimpinan.sphprogres.index');
-    Route::view('/pimpinan/sphgagal/index', 'pimpinan.sphgagal.index')->name('pimpinan.sphgagal.index');
-    Route::view('/pimpinan/sphsuccess/index', 'pimpinan.sphsuccess.index')->name('pimpinan.sphsuccess.index');
+    // dashboard
+    Route::get('pimpinan/dashboard/index', [\App\Http\Controllers\Pimpinan\DashboardController::class, 'index'])->name('pimpinan.dashboard.index');
+
+    // Route::view('/pimpinan/dashboard/index', 'pimpinan.dashboard.index')->name('pimpinan.dashboard.index');
+    //clients
+    Route::get('pimpinan/clients', [ClientsController::class, 'index'])->name('pimpinan.clients.index');
+    // Daftar Surat
+    Route::get('pimpinan/daftarsurat', [\App\Http\Controllers\Pimpinan\DaftarSuratController::class, 'index'])->name('pimpinan.daftarsurat.index');
+    // sph progres
+    Route::get('pimpinan/sph-progres', [App\Http\Controllers\Pimpinan\SphProgresController::class, 'index'])->name('pimpinan.sphprogres.index');
+    Route::get('pimpinan/sph-progres/gagal/{id}', [App\Http\Controllers\Pimpinan\SphProgresController::class, 'gagal'])->name('admin.surat.gagal');
+    Route::get('pimpinan/sph-progres/berhasil/{id}', [App\Http\Controllers\Pimpinan\SphProgresController::class, 'berhasil'])->name('admin.surat.berhasil');
+    // sph success
+    Route::get('pimpinan/sphsuccess', [App\Http\Controllers\Pimpinan\SphSuccessController::class, 'index'])->name('pimpinan.sphsuccess.index');
+    Route::get('pimpinan/sphsuccess/detail/{id}', [App\Http\Controllers\Pimpinan\SphSuccessController::class, 'detail'])->name('pimpinan.sphsuccess.detail');
+    // sph gagal
+    Route::get('pimpinan/sphgagal', [App\Http\Controllers\Pimpinan\SphGagalController::class, 'index'])->name('pimpinan.sphgagal.index');
+    Route::get('pimpinan/sphgagal/detail/{id}', [App\Http\Controllers\Pimpinan\SphGagalController::class, 'detail'])->name('pimpinan.sphgagal.detail');
+
 });

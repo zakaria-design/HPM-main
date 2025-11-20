@@ -5,5 +5,5 @@
 @section('menuPimpinanClients','active')
 {{-- memanggil livewire --}}
 @section('content')
-    @livewire('pimpinan.clients.index')
+    @include('content.pimpinan.clients.index')
 @endsection

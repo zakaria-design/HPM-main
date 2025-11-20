@@ -22,7 +22,7 @@
                                       style="width: 80px; height: 80px; object-fit: cover;">
                                   <p>
                                       {{ Auth::user()->name }}<br>
-                                      <span class="badge badge-success">{{ ucfirst(Auth::user()->role) }}</span>
+                                      <span class="badge bg-success">{{ ucfirst(Auth::user()->role) }}</span>
                                   </p>
                               </li>  
 

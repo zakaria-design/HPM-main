@@ -13,7 +13,7 @@
         <ul class="nav flex-column">
 
             <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.dashboard.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.dashboard.*') ? 'active' : '' }}">
@@ -23,7 +23,7 @@
             </li>
 
             <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.inputuser.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.inputuser.*') ? 'active' : '' }}">
@@ -33,7 +33,7 @@
             </li>
 
             <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.daftarsurat.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.daftarsurat.*') ? 'active' : '' }}">
@@ -43,7 +43,7 @@
             </li>
 
             <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.sphprogres.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.sphprogres.*') ? 'active' : '' }}">
@@ -53,7 +53,7 @@
             </li>
 
             <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.sphsuccess.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.sphsuccess.*') ? 'active' : '' }}">
@@ -63,7 +63,7 @@
             </li>
 
                         <li class="nav-item">
-                <a wire:navigate 
+                <a 
                 href="{{ route('admin.sphgagal.index') }}"
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('admin.sphgagal.*') ? 'active' : '' }}">

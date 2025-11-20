@@ -1,5 +1,5 @@
 <div>
-    <div id="content-wrapper">
+    <div id="content-wrapper" class="mb-5">
 
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
@@ -19,9 +19,9 @@
 
 
             <div>
-            <button type="button" class="btn btn-primary btn-sm ml-2 mb-4" data-toggle="modal" data-target="#userModal">
-                <i class="fas fa-user-plus"></i> Tambah User
-            </button>
+        <button class="btn btn-primary ml-3 mb-3 small btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
+            <i class="bi bi-person-plus"></i> Tambah User
+        </button>
 
                 
                     <div class="table-responsive">
@@ -39,7 +39,7 @@
                                 <tbody>
                                     @forelse ($users as $index => $user)
                                         <tr>
-                                           <td class="ps-5 small">{{ $users->firstItem() + $index }}</td>
+                                            <td class="ps-5 small">{{ $index + 1 }}</td>
                                             <td class="small">{{ $user->name }}</td>
                                             <td class="small">{{ $user->user_id }}</td>
                                             <td class="small">{{ $user->email }}</td>
@@ -48,17 +48,21 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-outline-info" 
-                                                        wire:click="setSelectedUser({{ $user->id }})" 
-                                                        data-toggle="modal" 
-                                                        data-target="#detailModal">
-                                                    <i class="fas fa-info-circle"></i>
+                                                <button 
+                                                    class="btn btn-sm btn-outline-info"
+                                                    onclick="showDetail({{ $user }})"
+                                                    title="Lihat Detail">
+                                                    <i class="fas fa-info-circle"></i> 
                                                 </button>
                                                 |
-                                                <button class="btn btn-sm btn-outline-danger" 
-                                                         wire:click="deleteUser({{ $user->id }})">
-                                                   <i class="fas fa-trash-alt"></i>
-                                                </button>
+                                                <form action="{{ route('admin.user.delete', $user->id) }}" class="d-inline" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-outline-danger" title="Hapus User">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
                                             </td>
 
                                         </tr>
@@ -69,53 +73,42 @@
                                     @endforelse
                                 </tbody>
                             </table>
-                            {{-- Pagination links --}}            
-                            {{ $users->links() }}
                     </div> 
                 </div> 
             </div>
         </section>
 
-        {{-- modal input user --}}
-        @include('livewire.admin.inputuser.user')
-         {{-- Notifikasi sukses --}}
-        @script
-            <script>
-                // Tutup modal setelah simpan
-                    $wire.on('closeModal', () => {
-                        $('#userModal').modal('hide');
-                    });
-
-               // SweetAlert feedback
-        $wire.on('showSuccess', data => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: data.message,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-                showConfirmButton: true, 
-                allowOutsideClick: true, 
-            });
-        });
-
-        Livewire.on('showError', (data) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'gagall!',
-                text: data.message,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#3085d6',
-                showConfirmButton: true, 
-                allowOutsideClick: true, 
-            });
-        });
-
-            </script>
-        @endscript
-
-        {{-- modal detail user --}}
-        @include('livewire.admin.inputuser.detail')
 
     </div>
 </div>
+
+@include('content.admin.inputuser.user')
+@include('content.admin.inputuser.detail')
+{{-- JS DETAIL MODAL --}}
+<script>
+    function showDetail(user) {
+
+        document.getElementById('d_nama').innerHTML = user.name;
+        document.getElementById('d_userid').innerHTML = user.user_id;
+        document.getElementById('d_email').innerHTML = user.email;
+        document.getElementById('d_role').innerHTML = user.role;
+        document.getElementById('d_alamat').innerHTML = user.alamat ?? '-';
+        document.getElementById('d_hp').innerHTML = user.no_hp ?? '-';
+
+        // --- Format tanggal ---
+        let tanggal = new Date(user.created_at).toLocaleDateString('id-ID', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        document.getElementById('d_created').innerHTML = tanggal;
+
+        // Foto
+        document.getElementById('d_foto').src =
+            user.foto ? "/foto_profil/" + user.foto : "/avatar.jpg";
+
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
+    }
+</script>
+
+
