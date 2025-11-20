@@ -1,7 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "sh vercel-build.sh",
-  "installCommand": "composer install --no-dev --optimize-autoloader && npm install",
-  "outputDirectory": "public",
-  "framework": null
+  "builds": [
+    {
+      "src": "api/index.php",
+      "use": "vercel-php@0.6.2"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
+  ]
 }
