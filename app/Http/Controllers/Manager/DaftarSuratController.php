@@ -16,16 +16,18 @@ class DaftarSuratController extends Controller
     $userId = Auth::user()->user_id;
 
     // Ambil semua SPH untuk user ini
-    $sph = DB::table('sph')
-        ->where('user_id', $userId)
-        ->select('nama_customer', 'nomor_surat', 'nominal', 'created_at', DB::raw('"SPH" as jenis'))
-        ->get();
+   $sph = DB::table('sph')
+    ->where('user_id', $userId)
+    ->where('status', 'berhasil')   // ⬅️ Tambahkan filter status berhasil
+    ->select('nama_customer', 'nomor_surat', 'nominal', 'created_at', DB::raw('"SPH" as jenis'))
+    ->get();
 
-    // Ambil semua INV untuk user ini
     $inv = DB::table('inv')
         ->where('user_id', $userId)
+        ->where('status', 'berhasil')   // ⬅️ Tambahkan filter status berhasil
         ->select('nama_customer', 'nomor_surat', 'nominal', 'created_at', DB::raw('"INV" as jenis'))
         ->get();
+
 
     // Ambil semua SKT untuk user ini
     $skt = DB::table('skt')

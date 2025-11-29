@@ -108,7 +108,22 @@
                                     <td class="ps-4 small">{{ $loop->iteration + ($surat->currentPage()-1) * $surat->perPage() }}</td>
                                     <td class="small">{{ $p->nomor_surat }}</td>
                                     <td class="small">{{ $p->nama_customer }}</td>
-                                    <td class="small">{{ ucwords($p->jenis) }}</td>
+                                    <td class="small fw-bold">
+                                        @foreach(explode(',', $p->jenis) as $jenis)
+                                            @php 
+                                                $jenis = trim($jenis); 
+                                                $color = match($jenis) {
+                                                    'SPH' => 'text-success',   // hijau
+                                                    'SKT' => 'text-danger',    // merah
+                                                    'INV' => 'text-warning',   // kuning
+                                                    default => 'text-secondary'
+                                                };
+                                            @endphp
+                                            
+                                            <span class="{{ $color }}">{{ $jenis }}</span>
+                                            @if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
                                     <td class="small">
                                         @if($p->nominal)
                                             Rp {{ number_format($p->nominal, 0, ',', '.') }}

@@ -2,7 +2,7 @@
     <div id="content-wrapper" class="mb-5">
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
-                <div class="row mb-2">
+                <div class="row mb-2 ps-2">
                     <div class="col-sm-6">
                         <h4 class="text-primary">
                             <i class="fas fa-mail-bulk me-1 text-primary"></i>
@@ -10,7 +10,7 @@
                         </h4>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 ps-2">
                         <ol class="breadcrumb float-sm-end">
                             <li class="breadcrumb-item">
                                 <a href="#">
@@ -93,7 +93,7 @@
                                 <th class="ps-4">No</th>
                                 <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis Surat</th>
+                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="fas fa-tools mr-1 mr-1 text-primary"></i> Aksi</th>
                             </tr>
@@ -104,7 +104,22 @@
                                     <td class="ps-4 small">{{ $loop->iteration + ($surat->currentPage()-1) * $surat->perPage() }}</td>
                                     <td class="small">{{ $p->nomor_surat }}</td>
                                     <td class="small">{{ $p->nama_customer }}</td>
-                                    <td class="small">{{ ucwords($p->jenis) }}</td>
+                                    <td class="small fw-bold">
+                                        @foreach(explode(',', $p->jenis) as $jenis)
+                                            @php 
+                                                $jenis = trim($jenis); 
+                                                $color = match($jenis) {
+                                                    'SPH' => 'text-success',   // hijau
+                                                    'SKT' => 'text-danger',    // merah
+                                                    'INV' => 'text-warning',   // kuning
+                                                    default => 'text-secondary'
+                                                };
+                                            @endphp
+                                            
+                                            <span class="{{ $color }}">{{ $jenis }}</span>
+                                            @if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
                                     <td class="small">
                                         @if($p->nominal)
                                             Rp {{ number_format($p->nominal, 0, ',', '.') }}
@@ -114,9 +129,40 @@
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-info"
-                                            onclick='showDetail(@json($p))'>
+                                            onclick='showDetail(@json($p))' title="Detail Surat">
                                             <i class="fas fa-info-circle"></i>
                                         </button>
+
+                                        <span> | </span>
+
+                                        <button 
+                                            class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit"
+                                            data-nama="{{ $p->nama_customer }}"
+                                            data-nomor="{{ $p->nomor_surat }}"
+                                            data-nominal="{{ $p->nominal }}"
+                                            data-jenis="{{ $p->jenis }}"
+                                            data-status="{{ $p->status ?? '' }}"
+                                            title="Edit Surat">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <span> | </span>
+
+                                        <form action="{{ route('admin.daftarsurat.delete') }}" method="POST" class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <input type="hidden" name="nomor_surat" value="{{ $p->nomor_surat }}">
+                                            <input type="hidden" name="jenis" value="{{ $p->jenis }}">
+
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus Surat">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
                                     </td>
 
                                 </tr>
@@ -142,6 +188,7 @@
      </div>
 </div>
 @include('content.admin.daftarsurat.modal')
+@include('content.admin.daftarsurat.edit-modal')
 {{-- modal detail surat --}}
 <script>
     function showDetail(data) {
@@ -166,7 +213,7 @@
             ? new Date(data.updated_at).toLocaleDateString('id-ID')
             : '-';
 
-        document.getElementById('d_updated').innerHTML = tglUpdate;
+        document.getElementById('d_updated_at').innerHTML = tglUpdate;
 
         new bootstrap.Modal(document.getElementById('detailModal')).show();
     }

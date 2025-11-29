@@ -22,8 +22,9 @@ class DaftarSuratController extends Controller
         // ============================
         // 🔹 Ambil semua SPH dari semua user
         // ============================
-        $sph = DB::table('sph')
+      $sph = DB::table('sph')
     ->join('users', 'sph.user_id', '=', 'users.user_id')
+    ->where('sph.status', 'berhasil') // ⬅⬅ TAMBAHAN
     ->select(
         'sph.user_id',
         'users.name as user_name',
@@ -42,12 +43,14 @@ class DaftarSuratController extends Controller
         // ============================
 $inv = DB::table('inv')
     ->join('users', 'inv.user_id', '=', 'users.user_id')
+    ->where('inv.status', 'berhasil') // ⬅⬅ TAMBAHAN
     ->select(
         'inv.user_id',
         'users.name as user_name',
         'inv.nama_customer',
         'inv.nomor_surat',
         'inv.nominal',
+        'inv.updated_at',
         'inv.created_at',
         DB::raw('"INV" as jenis')
     )

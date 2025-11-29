@@ -8,12 +8,12 @@
                     <!-- Title -->
                     <div class="col-sm-6">
                         <h3 class="text-primary">
-                            <i class="fas fa-reply-all"></i> @yield('title')
+                            <i class="fas fa-reply-all ps-2"></i> @yield('title')
                         </h3>
                     </div>
 
                     <!-- Breadcrumb -->
-                    <div class="col-sm-6 d-flex justify-content-sm-end">
+                    <div class="col-sm-6 d-flex justify-content-sm-end ps-4">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
@@ -41,10 +41,47 @@
             <div>
                 <div class="d-flex justify-content-between">
                 {{-- dropdown jenis surat --}}
-                <div class="col-12">
-                        <p class="text-l text-bold text-primary"><i class="fas fa-history mr-1"></i> Surat SPH In Progress</p>
+                <div class="col-12 ps-2">
+                        <p class="text-l text-bold text-primary"><i class="fas fa-history mr-1 ps-3"></i> Surat SPH dan INV in Progress</p>
                 </div>
                 </div>
+                        <div class="card-body">
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-3">
+
+            {{-- KIRI: Filter + dropdown --}}
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
+
+                <span class="fw-bold">Filter:</span>
+
+                {{-- Dropdown Jenis Surat --}}
+                <form method="GET" action="" class="w-100 w-md-auto">
+                    <select name="jenis" class="form-select" onchange="this.form.submit()">
+                        <option value="semua" {{ $jenis_surat == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
+                        <option value="SPH" {{ $jenis_surat == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
+                        <option value="INV" {{ $jenis_surat == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
+                    </select>
+                </form>
+
+            </div>
+
+            {{-- KANAN: Pencarian --}}
+            <div class="w-100 w-md-25">
+                <form action="" method="GET" class="input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ request('search') }}"
+                        placeholder="cari nama customer..." 
+                        class="form-control"
+                        autocomplete="off">
+
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
                 {{-- table --}}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle text-nowrap">
@@ -54,12 +91,13 @@
                                 <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
+                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                                 <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
                                 <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($data as $index => $row)
+                            @forelse ($surat as $index => $row)
                                 <tr>
                                     <td class="ps-4 small">{{ $index+1 }}</td>
                                     <td class="small">{{ $row->nomor_surat }}</td>
@@ -71,21 +109,48 @@
                                             -
                                         @endif
                                     </td>
+                                    <td class="small fw-bold">
+                                        @foreach(explode(',', $row->jenis_surat) as $jenis)
+                                            @php 
+                                                $jenis = trim($jenis); 
+                                                $color = match($jenis) {
+                                                    'SPH' => 'text-success',   // hijau
+                                                    'SKT' => 'text-danger',    // merah
+                                                    'INV' => 'text-warning',   // kuning
+                                                    default => 'text-secondary'
+                                                };
+                                            @endphp
+                                            
+                                            <span class="{{ $color }}">{{ $jenis }}</span>
+                                            @if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
                                     <td class="small">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') }}</td>
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center align-items-center gap-2 ms-n4" style="margin-left: -14px;">
-                                            <a href="{{ route('manager.surat.gagal', $row->id) }}" class="btn btn-outline-danger d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px;" title="tandai gagal">
+                                        <div class="d-flex justify-content-start align-items-center gap-2">
+
+                                            <!-- Tombol Gagal -->
+                                            <a href="{{ route('manager.surat.status', ['table' => $row->sumber_tabel, 'id' => $row->id, 'status' => 'gagal']) }}"
+                                            onclick="return confirm('Tandai sebagai gagal?');"
+                                            class="btn btn-outline-danger rounded-circle d-flex justify-content-center align-items-center"
+                                            style="width:32px;height:32px;padding:0;"
+                                            title="Tandai Gagal">
                                                 <i class="fas fa-times"></i>
                                             </a>
 
-                                            <span class="text-muted small">|</span>
+                                            <span>|</span>
 
-                                            <a href="{{ route('manager.surat.berhasil', $row->id) }}" class="btn btn-outline-success d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px;" title="tandai berhasil">
+                                            <!-- Tombol Berhasil -->
+                                            <a href="{{ route('manager.surat.status', ['table' => $row->sumber_tabel, 'id' => $row->id, 'status' => 'berhasil']) }}"
+                                            onclick="return confirm('Tandai sebagai berhasil?');"
+                                            class="btn btn-outline-success rounded-circle d-flex justify-content-center align-items-center"
+                                            style="width:32px;height:32px;padding:0;"
+                                            title="Tandai Berhasil">
                                                 <i class="fas fa-check"></i>
                                             </a>
-                                        </div>
-                                    </td>
 
+                                        </div>
+                                    </td>                                   
                                 </tr>
                             @empty
                                 <tr>
@@ -96,15 +161,16 @@
                     </table>
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{-- {{ $dataSurat->links() }} --}}
+                        {{ $surat->links('pagination::bootstrap-5') }}
                     </div>
+
                 </div>    
             </div>
         </div>  
     </section>
 
 {{-- card update surat --}}
-    <section class="content">
+    {{-- <section class="content">
         <div class="container py-4">
             <h4 class="mb-4 text-center fw-bold text-primary">Update Surat SPH</h4>
 
@@ -200,7 +266,7 @@
             }
         </style>
     </section>
-    
+     --}}
     {{-- modal --}}
     @include('content.manager.updatesurat.modal')
     <script>

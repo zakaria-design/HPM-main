@@ -70,15 +70,15 @@
 </style>
 
 {{-- link menu active --}}
-<style>
+{{-- <style>
     .nav-link.active {
     background-color: #f59d19 !important; /* hijau */
     color: #fff !important;
     }
-</style>
+</style> --}}
 
 {{-- dark mode --}}
-<style>
+{{-- <style>
       #toggle-dark i.fa-sun { color: #ffc107; }
       #toggle-dark i.fa-moon { color: #adb5bd; }
       /* Tabel dark mode */
@@ -114,6 +114,6 @@
           scrollbar-color: #fff #000; /* thumb color / track color */
       }
 
-</style>
+</style> --}}
 
 

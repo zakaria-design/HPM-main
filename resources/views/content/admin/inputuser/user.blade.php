@@ -47,11 +47,11 @@
                                 <input type="text" name="no_hp" class="form-control">
                             </div>
 
-                            <div class="col-md-12 mb-3">
+                            {{-- <div class="col-md-12 mb-3">
                                 <label class="form-label fw-semibold">Foto (Opsional/boleh kosong)</label>
                                 <input type="file" name="foto" class="form-control">
                                 <small class="text-muted">Format: jpg, jpeg, png | Maks 2MB</small>
-                            </div>
+                            </div> --}}
 
                         </div>
 

@@ -7,7 +7,7 @@
         style="width: 40px; height: 40px; object-fit: cover;" 
         alt="hppm">
 
-    <h5 class="ml-2 hide-when-collapse" style="margin-top: 7px;">HPM</h5>
+    <h5 class="ml-2 hide-when-collapse ps-1" style="margin-top: 7px;">HPM</h5>
 </div>
 
         <ul class="nav flex-column">
@@ -49,6 +49,16 @@
                 {{ request()->routeIs('manager.updatesurat.*') ? 'active' : '' }}">
                     <i class='bx  bx-hourglass fs-4 me-2'    ></i> 
                     <span class="hide-when-collapse" style="opacity: 0.8;">Update Surat</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a 
+                href="{{ route('manager.suratgagal.index') }}"
+                class="nav-link text-white d-flex align-items-center menu-link 
+                {{ request()->routeIs('manager.suratgagal.*') ? 'active' : '' }}">
+                    <i class='bx  bx-calendar-x fs-4 me-2'></i>  
+                    <span class="hide-when-collapse" style="opacity: 0.8;">Surat Gagal</span>
                 </a>
             </li>
         </ul>

@@ -1,28 +1,28 @@
 <div>
-    <div id="content-wrapper" class="mb-5">
-
+    <div id="content-wrapper">
+            <!-- Content Header (Page header) -->
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
                 <div class="row mb-2 align-items-center">
 
-                    <!-- Judul -->
+                    <!-- Title -->
                     <div class="col-sm-6">
-                        <h4 class="text-primary">
-                            <i class="fas fa-check-circle"></i> @yield('title')
-                        </h4>
+                        <h3 class="text-primary">
+                            <i class="fas fa-times-circle ps-2"></i> @yield('title')
+                        </h3>
                     </div>
 
                     <!-- Breadcrumb -->
-                    <div class="col-sm-6 d-flex justify-content-sm-end">
+                    <div class="col-sm-6 d-flex justify-content-sm-end ps-4">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
                                     <a href="#">
-                                        <i class="fas fa-user-tie"></i> Pimpinan
+                                        <i class="fas fa-user"></i> User
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    <i class="fas fa-check-circle"></i> @yield('title')
+                                    <i class="fas fa-times-circle"></i> @yield('title')
                                 </li>
                             </ol>
                         </nav>
@@ -32,9 +32,7 @@
             </div>
         </section>
 
-
-
-     <section class="content">
+         <section class="content">
             <div>
         <!-- Default box -->
         <div>
@@ -43,7 +41,7 @@
                 <div class="d-flex justify-content-between">
                 {{-- dropdown jenis surat --}}
                 <div class="col-12 ps-2">
-                        <p class="text-l text-bold text-primary"><i class="fas fa-calendar-check ps-2"></i> Surat SPH dan INV success</p>
+                        <p class="text-l text-bold text-primary"><i class="far fa-calendar-times ps-3 mr-1"></i> Surat SPH dan INV yang gagal</p>
                 </div>
                 </div>
                         <div class="card-body">
@@ -57,9 +55,9 @@
                 {{-- Dropdown Jenis Surat --}}
                 <form method="GET" action="" class="w-100 w-md-auto">
                     <select name="jenis" class="form-select" onchange="this.form.submit()">
-                        <option value="semua" {{ $jenis_surat == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
-                        <option value="SPH" {{ $jenis_surat == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
-                        <option value="INV" {{ $jenis_surat == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
+                        <option value="semua" {{ $jenis == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
+                        <option value="SPH" {{ $jenis == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
+                        <option value="INV" {{ $jenis == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
                     </select>
                 </form>
 
@@ -93,14 +91,14 @@
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
-                                <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
+                                <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Update</th>
                                 <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($surat as $index => $row)
+                            @forelse ($data as $index => $row)
                                 <tr>
-                                    <td class="ps-4 small">{{ ($surat->currentPage() - 1) * $surat->perPage() + ($index + 1) }}</td>
+                                    <td class="ps-4 small">{{ $index+1 }}</td>
                                     <td class="small">{{ $row->nomor_surat }}</td>
                                     <td class="small">{{ $row->nama_customer }}</td>
                                     <td class="small"> 
@@ -111,7 +109,7 @@
                                         @endif
                                     </td>
                                     <td class="small fw-bold">
-                                        @foreach(explode(',', $row->jenis) as $jenis)
+                                        @foreach(explode(',', $row->jenis_surat) as $jenis)
                                             @php 
                                                 $jenis = trim($jenis); 
                                                 $color = match($jenis) {
@@ -126,15 +124,32 @@
                                             @if(!$loop->last), @endif
                                         @endforeach
                                     </td>
-                                    <td class="small">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') }}</td>
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-start align-items-center gap-2">
-                                            <button class="btn btn-sm btn-outline-info"
-                                                onclick='showDetail(@json($row))' title="Detail Surat">
-                                                <i class="fas fa-info-circle"></i>
+                                    <td class="small">{{ \Carbon\Carbon::parse($row->updated_at)->format('d/m/Y') }}</td>                                  
+                                    <td>
+                                        <button class="btn btn-outline-success btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editModal"
+                                                data-id="{{ $row->id }}"
+                                                data-jenis="{{ $row->jenis_surat }}"
+                                                data-nomor="{{ $row->nomor_surat }}"
+                                                data-nama="{{ $row->nama_customer }}"
+                                                data-nominal="{{ $row->nominal }}"
+                                                data-status="{{ $row->status }}"
+                                                title="Edit Data">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <span> | </span>
+                                        <form action="{{ route('manager.suratgagal.delete') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="id" value="{{ $row->id }}">
+                                            <input type="hidden" name="jenis_surat" value="{{ $row->jenis_surat }}">
+                                            <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Yakin hapus data?')"
+                                             title="Hapus Data">
+                                                <i class="fas fa-trash-alt"></i>
                                             </button>
-                                        </div>
-                                    </td>                                   
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -145,7 +160,7 @@
                     </table>
                     <!-- Pagination -->
                     <div class="mt-3">
-                        {{ $surat->links('pagination::bootstrap-5') }}
+                        {{ $data->links('pagination::bootstrap-5') }}
                     </div>
 
                 </div>    
@@ -153,39 +168,7 @@
         </div>  
     </section>
 
-     </div>
+    </div>
 </div>
 
-{{-- modal detail --}}
-@include('content.pimpinan.sphsuccess.modal')
-
-{{-- detail modal --}}
-<script>
-    function showDetail(data) {
-
-        document.getElementById('d_jenis').innerHTML = data.jenis;
-        document.getElementById('d_customer').innerHTML = data.nama_customer;
-        document.getElementById('d_nomor').innerHTML = data.nomor_surat;
-        // Format nominal: 1000000 => 1.000.000
-        let nominalFormatted = data.nominal 
-            ? new Intl.NumberFormat('id-ID').format(data.nominal)
-            : '-';
-
-        document.getElementById('d_nominal').innerHTML = nominalFormatted;
-
-        let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
-        document.getElementById('d_created').innerHTML = tgl;
-
-        // Tambahkan nama user
-        document.getElementById('d_user').innerHTML = data.user_name ?? '-';
-
-        let tglUpdate = data.updated_at 
-            ? new Date(data.updated_at).toLocaleDateString('id-ID')
-            : '-';
-
-        document.getElementById('d_updated_at').innerHTML = tglUpdate;
-
-        new bootstrap.Modal(document.getElementById('detailModal')).show();
-    }
-
-</script>
+@include('content.manager.suratgagal.modal')

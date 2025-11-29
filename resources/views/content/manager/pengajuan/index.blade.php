@@ -9,12 +9,12 @@
                 <!-- Title -->
                 <div class="col-sm-6">
                     <h3 class="text-primary">
-                        <i class="fas fa-envelope-open-text"></i> @yield('title')
+                        <i class="fas fa-envelope-open-text ps-2"></i> @yield('title')
                     </h3>
                 </div>
 
                 <!-- Breadcrumb -->
-                <div class="col-sm-6 d-flex justify-content-sm-end">
+                <div class="col-sm-6 d-flex justify-content-sm-end ps-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item">
@@ -41,7 +41,7 @@
       <!-- Default box -->
       <div>
         <div>
-            <div class="d-flex ps-2 mb-4">
+            <div class="d-flex ps-4 mb-4">
             <!-- Tombol buka modal -->
                 <!-- Button -->
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSurat">
@@ -59,9 +59,10 @@
                             <th class="ps-4">No</th>
                             <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                            <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis Surat</th>
+                            <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                             <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                             <th><i class="fas fa-clock mr-1 text-primary"></i> Jam</th>
+                            <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +96,34 @@
                                 </td>
 
                                 <td class="small">{{ \Carbon\Carbon::parse($p->created_at)->translatedFormat('H.i') }} WIB</td>
+                                <td>
+
+                                    <button class="btn btn-outline-success btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editModal"
+                                        data-id="{{ $p->id }}"
+                                        data-tabel="{{ $p->sumber_tabel }}"
+                                        data-jenis="{{ $p->jenis }}"
+                                        data-nomor="{{ $p->nomor_surat }}"
+                                        data-nama="{{ $p->nama_customer }}"
+                                        data-nominal="{{ $p->nominal }}"
+                                        title="Edit Data">
+
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    <span> | </span>
+                                    
+                                    <form action="{{ url('/manager/pengajuan/delete/'.$p->sumber_tabel.'/'.$p->id) }}" 
+                                        method="POST" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-outline-danger btn-sm" onclick="return confirm('Hapus data?')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+
+                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -111,7 +140,7 @@
 
      {{-- create modal --}}
     @include('content.manager.pengajuan.surat')
-
+    @include('content.manager.pengajuan.modal-edit')
 
     </div>
 </div>

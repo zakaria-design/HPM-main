@@ -1,5 +1,5 @@
 <div>
-     <div id="content-wrapper">
+     <div id="content-wrapper" class="mb-5">
 
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
@@ -34,30 +34,53 @@
 
 
         <section class="content-header">
-                <div class=" mb-3 ml-3 col-10 col-md-4">
-                        <form action="" method="GET" class="input-group">
-                            <input 
-                                type="text" 
-                                name="search" 
-                                value="{{ request('search') }}"
-                                placeholder="cari nama customer..." 
-                                class="form-control"
-                                autocomplete="off">
+            <p class="text-primary ps-3"><i class="far fa-calendar-check"></i> Surat SPH Dan INV Success</p>
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-3">
 
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </form>
+                {{-- KIRI: Filter + dropdown --}}
+                <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
+
+                    <span class="fw-bold">Filter:</span>
+
+                    {{-- Dropdown Jenis Surat --}}
+                    <form method="GET" action="" class="w-100 w-md-auto">
+                        <select name="jenis" class="form-select" onchange="this.form.submit()">
+                            <option value="semua" {{ $jenis_surat == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
+                            <option value="SPH" {{ $jenis_surat == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
+                            <option value="INV" {{ $jenis_surat == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
+                        </select>
+                    </form>
+
                 </div>
-                <div class="table-responsive">
+
+                {{-- KANAN: Pencarian --}}
+                <div class="w-100 w-md-25">
+                    <form action="" method="GET" class="input-group">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            value="{{ request('search') }}"
+                            placeholder="cari nama customer..." 
+                            class="form-control"
+                            autocomplete="off">
+
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+            <div class="table-responsive">
                 <table class="table table-hover align-middle text-nowrap data-table">
                     <thead>
                         <tr>
                             <th class="ps-5">No</th>
                             <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor Surat</th>
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
+                            <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                             <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
-                            <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Detail</th>
+                            <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,14 +89,45 @@
                                 <td class="ps-5 small"> {{ ($data->currentPage() - 1) * $data->perPage() + $index + 1 }}</td>
                                 <td class="small">{{ $item->nomor_surat }}</td>
                                 <td class="small">{{ $item->nama_customer }}</td>
+                                <td class="small fw-bold">
+                                        @foreach(explode(',', $item->jenis) as $jenis)
+                                            @php 
+                                                $jenis = trim($jenis); 
+                                                $color = match($jenis) {
+                                                    'SPH' => 'text-success',   // hijau
+                                                    'SKT' => 'text-danger',    // merah
+                                                    'INV' => 'text-warning',   // kuning
+                                                    default => 'text-secondary'
+                                                };
+                                            @endphp
+                                            
+                                            <span class="{{ $color }}">{{ $jenis }}</span>
+                                            @if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
                                 <td class="small">Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-info" 
-                                            data-id="{{ $item->id }}" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailModal">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
+                                        <button class="btn btn-sm btn-outline-info"
+                                            onclick='showDetail(@json($item))' title="Detail Surat">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+
+                                    <span> | </span>
+
+                                        <button 
+                                            class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEdit"
+                                            data-nama="{{ $item->nama_customer }}"
+                                            data-nomor="{{ $item->nomor_surat }}"
+                                            data-nominal="{{ $item->nominal }}"
+                                            data-jenis="{{ $item->jenis }}"
+                                            data-status="{{ $item->status ?? '' }}"
+                                            title="Edit Surat">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+
                                 </td>
                             </tr>
                         @empty
@@ -95,41 +149,67 @@
 </div>
 {{-- detail modal --}}
 @include('content.admin.sphsuccess.modal')
+@include('content.admin.sphsuccess.edit-modal')
+{{-- edit modal --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function showDetail(data) {
 
-        function formatTanggal(rawDate) {
-            if (!rawDate) return "-";
+        document.getElementById('d_jenis').innerHTML = data.jenis;
+        document.getElementById('d_customer').innerHTML = data.nama_customer;
+        document.getElementById('d_nomor').innerHTML = data.nomor_surat;
+        // Format nominal: 1000000 => 1.000.000
+        let nominalFormatted = data.nominal 
+            ? new Intl.NumberFormat('id-ID').format(data.nominal)
+            : '-';
 
-            const d = new Date(rawDate);
+        document.getElementById('d_nominal').innerHTML = nominalFormatted;
 
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
+        let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
+        document.getElementById('d_created').innerHTML = tgl;
 
-            return `${day}-${month}-${year}`;
-        }
+        // Tambahkan nama user
+        document.getElementById('d_user').innerHTML = data.user_name ?? '-';
 
-        var detailModal = document.getElementById('detailModal');
-        detailModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
+        let tglUpdate = data.updated_at 
+            ? new Date(data.updated_at).toLocaleDateString('id-ID')
+            : '-';
 
-            fetch(`/admin/sphsuccess/detail/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('modalNomorSurat').textContent = data.nomor_surat;
-                    document.getElementById('modalNamaCustomer').textContent = data.nama_customer;
-                    document.getElementById('modalNominal').textContent = "Rp. " + parseFloat(data.nominal).toLocaleString('id-ID');
-                    document.getElementById('modalUserName').textContent = data.user_name ?? '-';
-                    document.getElementById('modalStatus').textContent = data.status ?? 'Success';
+        document.getElementById('d_updated_at').innerHTML = tglUpdate;
 
-                    // Ubah format tanggal
-                    document.getElementById('modalCreatedAt').textContent = formatTanggal(data.created_at);
-                    document.getElementById('modalUpdatedAt').textContent = formatTanggal(data.updated_at);
-                })
-                .catch(err => console.error(err));
-        });
-    });
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
+    }
+
+</script>
+
+
+{{-- detail modal --}}
+<script>
+    function showDetail(data) {
+
+        document.getElementById('d_jenis').innerHTML = data.jenis;
+        document.getElementById('d_customer').innerHTML = data.nama_customer;
+        document.getElementById('d_nomor').innerHTML = data.nomor_surat;
+        // Format nominal: 1000000 => 1.000.000
+        let nominalFormatted = data.nominal 
+            ? new Intl.NumberFormat('id-ID').format(data.nominal)
+            : '-';
+
+        document.getElementById('d_nominal').innerHTML = nominalFormatted;
+
+        let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
+        document.getElementById('d_created').innerHTML = tgl;
+
+        // Tambahkan nama user
+        document.getElementById('d_user').innerHTML = data.user_name ?? '-';
+
+        let tglUpdate = data.updated_at 
+            ? new Date(data.updated_at).toLocaleDateString('id-ID')
+            : '-';
+
+        document.getElementById('d_updated_at').innerHTML = tglUpdate;
+
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
+    }
+
 </script>
 

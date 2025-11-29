@@ -23,52 +23,58 @@ class DaftarSuratController extends Controller
         // 🔹 Ambil semua SPH dari semua user
         // ============================
         $sph = DB::table('sph')
-    ->join('users', 'sph.user_id', '=', 'users.user_id')
-    ->select(
-        'sph.user_id',
-        'users.name as user_name',
-        'sph.nama_customer',
-        'sph.nomor_surat',
-        'sph.nominal',
-        'sph.updated_at',
-        'sph.created_at',
-        DB::raw('"SPH" as jenis')
-    )
-    ->get();
+            ->join('users', 'sph.user_id', '=', 'users.user_id')
+            ->select(
+                'sph.user_id',
+                'users.name as user_name',
+                'sph.nama_customer',
+                'sph.nomor_surat',
+                'sph.nominal',
+                'sph.status',
+                'sph.updated_at',
+                'sph.created_at',
+                DB::raw('"SPH" as jenis')
+            )
+            ->where('sph.status', 'berhasil')   // ⬅️ Tambahkan ini
+            ->get();
 
 
         // ============================
         // 🔹 Ambil semua INV dari semua user
         // ============================
-$inv = DB::table('inv')
-    ->join('users', 'inv.user_id', '=', 'users.user_id')
-    ->select(
-        'inv.user_id',
-        'users.name as user_name',
-        'inv.nama_customer',
-        'inv.nomor_surat',
-        'inv.nominal',
-        'inv.created_at',
-        DB::raw('"INV" as jenis')
-    )
-    ->get();
+        $inv = DB::table('inv')
+            ->join('users', 'inv.user_id', '=', 'users.user_id')
+            ->select(
+                'inv.user_id',
+                'users.name as user_name',
+                'inv.nama_customer',
+                'inv.nomor_surat',
+                'inv.nominal',
+                'inv.status',
+                'inv.updated_at',
+                'inv.created_at',
+                DB::raw('"INV" as jenis')
+            )
+            ->where('inv.status', 'berhasil')   // ⬅️ Tambahkan ini
+            ->get();
+
 
 
         // ============================
         // 🔹 Ambil semua SKT dari semua user
         // ============================
-$skt = DB::table('skt')
-    ->join('users', 'skt.user_id', '=', 'users.user_id')
-    ->select(
-        'skt.user_id',
-        'users.name as user_name',
-        'skt.nama_customer',
-        'skt.nomor_surat',
-        DB::raw('NULL as nominal'),
-        'skt.created_at',
-        DB::raw('"SKT" as jenis')
-    )
-    ->get();
+        $skt = DB::table('skt')
+            ->join('users', 'skt.user_id', '=', 'users.user_id')
+            ->select(
+                'skt.user_id',
+                'users.name as user_name',
+                'skt.nama_customer',
+                'skt.nomor_surat',
+                DB::raw('NULL as nominal'),
+                'skt.created_at',
+                DB::raw('"SKT" as jenis')
+            )
+            ->get();
 
 
         // ============================
@@ -150,4 +156,72 @@ $skt = DB::table('skt')
             'jenis' => $jenis ?? 'semua'
         ]);
     }
+
+    // edit data
+    public function update(Request $request)
+    {
+        $request->validate([
+            'nomor_surat' => 'required',
+            'jenis' => 'required',
+            'nama_customer' => 'required',
+        ]);
+
+        if ($request->jenis === 'SPH') {
+            DB::table('sph')
+                ->where('nomor_surat', $request->nomor_surat)
+                ->update([
+                    'nama_customer' => $request->nama_customer,
+                    'nominal' => $request->nominal,
+                    'status' => $request->status,
+                    'updated_at' => now()
+                ]);
+        }
+
+        if ($request->jenis === 'INV') {
+            DB::table('inv')
+                ->where('nomor_surat', $request->nomor_surat)
+                ->update([
+                    'nama_customer' => $request->nama_customer,
+                    'nominal' => $request->nominal,
+                    'status' => $request->status,
+                    'updated_at' => now()
+                ]);
+        }
+
+        if ($request->jenis === 'SKT') {
+            DB::table('skt')
+                ->where('nomor_surat', $request->nomor_surat)
+                ->update([
+                    'nama_customer' => $request->nama_customer,
+                    'updated_at' => now()
+                ]);
+        }
+
+        return back()->with('success', 'Data berhasil diperbarui!');
+    }
+
+    //hapus data 
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'nomor_surat' => 'required',
+            'jenis' => 'required'
+        ]);
+
+        if ($request->jenis === 'SPH') {
+            DB::table('sph')->where('nomor_surat', $request->nomor_surat)->delete();
+        }
+
+        if ($request->jenis === 'INV') {
+            DB::table('inv')->where('nomor_surat', $request->nomor_surat)->delete();
+        }
+
+        if ($request->jenis === 'SKT') {
+            DB::table('skt')->where('nomor_surat', $request->nomor_surat)->delete();
+        }
+
+        return back()->with('success', 'Data berhasil dihapus!');
+    }
+
+
 }

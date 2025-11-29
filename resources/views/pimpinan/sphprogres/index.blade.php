@@ -1,6 +1,6 @@
 @extends('pimpinan.layouts.app')
 
-@section('title','Sph Progres')
+@section('title','Surat in Progres')
 {{-- menu yg active --}}
 @section('menuPimpinanSphProgres','active')
 {{-- memanggil livewire --}}

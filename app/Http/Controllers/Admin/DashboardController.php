@@ -10,12 +10,41 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung jumlah surat per tabel tanpa filter user
-        $jumlahProgresSph = DB::table('progres_sph')->count();
-        $jumlahSphGagal   = DB::table('sph_gagal')->count();
-        $jumlahSph        = DB::table('sph')->count();
-        $jumlahInv        = DB::table('inv')->count();
-        $jumlahSkt        = DB::table('skt')->count();
+        // ==============================
+        // AMBIL DATA SURAT GAGAL
+        // ==============================
+
+        // SPH Gagal
+        $sphGagal = DB::table('sph')
+            ->where('status', 'gagal')
+            ->select('id', 'nama_customer', 'nomor_surat', 'nominal', 'status', DB::raw('"SPH" as jenis'))
+            ->get();
+
+        // INV Gagal
+        $invGagal = DB::table('inv')
+            ->where('status', 'gagal')
+            ->select('id', 'nama_customer', 'nomor_surat', 'nominal', 'status', DB::raw('"INV" as jenis'))
+            ->get();
+
+        // Gabungkan SPH + INV
+        $suratGagal = $sphGagal->merge($invGagal);
+
+        // Hitung jumlah gagal
+        $jumlahSphGagal = $sphGagal->count();
+        $jumlahInvGagal = $invGagal->count();
+
+        // Total surat gagal
+        $jumlahSuratGagal = $jumlahSphGagal + $jumlahInvGagal;
+
+
+
+        // ==============================
+        // JUMLAH SURAT PER TABEL (GET ALL)
+        // ==============================
+        $jumlahSph = DB::table('sph')->count();
+        $jumlahInv = DB::table('inv')->count();
+        $jumlahSkt = DB::table('skt')->count();
+
 
         // Ambil daftar customer dari masing-masing tabel
         $custSph = DB::table('sph')->pluck('nama_customer');
@@ -29,27 +58,30 @@ class DashboardController extends Controller
             ->unique()
             ->count();
 
-        // Ambil data hari ini dari progres_sph
-        $todayProgresSph = DB::table('progres_sph')
-            ->leftJoin('users', 'progres_sph.user_id', '=', 'users.user_id')
-            ->whereDate('progres_sph.created_at', now())
-            ->select('progres_sph.*', 'users.name as user_name')
+        // Ambil data hari ini dari progres_sph (status NULL)
+        $todayProgresSph = DB::table('sph')
+            ->leftJoin('users', 'sph.user_id', '=', 'users.user_id')
+            ->whereDate('sph.created_at', now())
+            ->whereNull('sph.status')   // ⬅️ Tambahkan filter status NULL
+            ->select('sph.*', 'users.name as user_name')
             ->get()
             ->map(function($item) {
-                $item->jenis = 'Progres SPH';
+                $item->jenis = 'SPH';
                 return $item;
             });
 
-        // Ambil data hari ini dari inv
+        // Ambil data hari ini dari progres_inv (status NULL)
         $todayInv = DB::table('inv')
             ->leftJoin('users', 'inv.user_id', '=', 'users.user_id')
             ->whereDate('inv.created_at', now())
+            ->whereNull('inv.status')   // ⬅️ Tambahkan filter status NULL
             ->select('inv.*', 'users.name as user_name')
             ->get()
             ->map(function($item) {
                 $item->jenis = 'INV';
                 return $item;
             });
+
 
         // Ambil data hari ini dari skt
         $todaySkt = DB::table('skt')
@@ -70,10 +102,10 @@ class DashboardController extends Controller
             ->values(); // tambahkan values()
 
         return view('admin.dashboard.index', compact(
-            'jumlahProgresSph',
             'jumlahSphGagal',
             'jumlahSph',
             'jumlahInv',
+            'jumlahSuratGagal',
             'jumlahSkt',
             'todayAll'
         ));

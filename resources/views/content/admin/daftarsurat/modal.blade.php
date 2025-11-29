@@ -41,7 +41,7 @@
 
                         <div class="row mb-2">
                             <div class="col-5 fw-bold">Tanggal Update</div>
-                            <div class="col-7">: <span id="d_updated"></span></div>
+                            <div class="col-7">: <span id="d_updated_at"></span></div>
                         </div>
 
                         <div class="row mb-2">

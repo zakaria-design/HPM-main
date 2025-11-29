@@ -6,14 +6,14 @@
             <div class="row mb-2 align-items-center">
 
                 <!-- Title -->
-                <div class="col-sm-6">
+                <div class="col-sm-6 ps-4">
                     <h3 class="text-primary">
                         <i class="fas fa-mail-bulk"></i> @yield('title')
                     </h3>
                 </div>
 
                 <!-- Breadcrumb -->
-                <div class="col-sm-6 d-flex justify-content-sm-end">
+                <div class="col-sm-6 d-flex justify-content-sm-end ps-4">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item">
@@ -98,7 +98,7 @@
                                 <th class="ps-4">No</th>
                                 <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis Surat</th>
+                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
                             </tr>
@@ -142,9 +142,10 @@
                         </tbody>
                     </table>
                   <!-- Pagination -->
-                <div class="mt-3">
-                    {{ $surat->links() }}
-                </div>
+                    <div class="mt-3">
+                        {{ $surat->links('pagination::bootstrap-5') }}
+                    </div>
+
             </div>    
         </div>
       </div>  

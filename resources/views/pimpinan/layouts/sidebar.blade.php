@@ -49,7 +49,7 @@
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('pimpinan.sphprogres.*') ? 'active' : '' }}">
                     <i class='bx  bx-hourglass fs-4 me-2'    ></i> 
-                    <span class="hide-when-collapse" style="opacity: 0.8;">SPH In Progres</span>
+                    <span class="hide-when-collapse" style="opacity: 0.8;">Surat In Progres</span>
                 </a>
             </li>
 
@@ -59,7 +59,7 @@
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('pimpinan.sphsuccess.*') ? 'active' : '' }}">
                     <i class='bx  bx-check-circle fs-4 me-2'    ></i> 
-                    <span class="hide-when-collapse" style="opacity: 0.8;">SPH Success</span>
+                    <span class="hide-when-collapse" style="opacity: 0.8;">Surat Success</span>
                 </a>
             </li>
 
@@ -69,7 +69,7 @@
                 class="nav-link text-white d-flex align-items-center menu-link 
                 {{ request()->routeIs('pimpinan.sphgagal.*') ? 'active' : '' }}">
                     <i class='bx  bx-x-circle fs-4 me-2'    ></i> 
-                    <span class="hide-when-collapse" style="opacity: 0.8;">SPH Gagal</span>
+                    <span class="hide-when-collapse" style="opacity: 0.8;">Surat Gagal</span>
                 </a>
             </li>
 

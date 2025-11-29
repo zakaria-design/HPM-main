@@ -33,101 +33,158 @@
         </section>
 
 
-        <section class="content-header">
-                <div class=" mb-3 ml-3 col-10 col-md-4">
-                        <form action="" method="GET" class="input-group">
-                            <input 
-                                type="text" 
-                                name="search" 
-                                value="{{ request('search') }}"
-                                placeholder="cari nama customer..." 
-                                class="form-control"
-                                autocomplete="off">
+         <section class="content">
+            <div>
+        <!-- Default box -->
+        <div>
+            {{-- card --}}
+            <div>
+                <div class="d-flex justify-content-between">
+                {{-- dropdown jenis surat --}}
+                <div class="col-12 ps-2">
+                        <p class="text-l text-bold text-primary"><i class="fas fa-calendar-times ps-2"></i> Surat SPH dan INV Gagal</p>
+                </div>
+                </div>
+                        <div class="card-body">
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-3">
 
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </form>
-                </div>
-                <div class="table-responsive">
-                <table class="table table-hover align-middle text-nowrap data-table">
-                    <thead>
-                        <tr>
-                            <th class="ps-5">No</th>
-                            <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor Surat</th>
-                            <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                            <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
-                            <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Detail</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($data as $index => $item)
-                            <tr>
-                                <td class="ps-5 small"> {{ ($data->currentPage() - 1) * $data->perPage() + $index + 1 }}</td>
-                                <td class="small">{{ $item->nomor_surat }}</td>
-                                <td class="small">{{ $item->nama_customer }}</td>
-                                <td class="small">Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-info" 
-                                            data-id="{{ $item->id }}" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailModal">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Tidak ada data</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+            {{-- KIRI: Filter + dropdown --}}
+            <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
 
-                </table>
-                </div>
-                <div class="mt-2">
-                    {{ $data->links('pagination::bootstrap-5') }}
-                </div>
+                <span class="fw-bold">Filter:</span>
+
+                {{-- Dropdown Jenis Surat --}}
+                <form method="GET" action="" class="w-100 w-md-auto">
+                    <select name="jenis" class="form-select" onchange="this.form.submit()">
+                        <option value="semua" {{ $jenis_surat == 'semua' ? 'selected' : '' }}>Semua Jenis</option>
+                        <option value="SPH" {{ $jenis_surat == 'SPH' ? 'selected' : '' }}>Surat Penawaran Harga</option>
+                        <option value="INV" {{ $jenis_surat == 'INV' ? 'selected' : '' }}>Surat Invoice</option>
+                    </select>
+                </form>
+
             </div>
-        </section>
+
+            {{-- KANAN: Pencarian --}}
+            <div class="w-100 w-md-25">
+                <form action="" method="GET" class="input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ request('search') }}"
+                        placeholder="cari nama customer..." 
+                        class="form-control"
+                        autocomplete="off">
+
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+                {{-- table --}}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">No</th>
+                                <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
+                                <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
+                                <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
+                                <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                                <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
+                                <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($surat as $index => $row)
+                                <tr>
+                                    <td class="ps-4 small">{{ ($surat->currentPage() - 1) * $surat->perPage() + ($index + 1) }}</td>
+                                    <td class="small">{{ $row->nomor_surat }}</td>
+                                    <td class="small">{{ $row->nama_customer }}</td>
+                                    <td class="small"> 
+                                        @if($row->nominal)
+                                            Rp {{ number_format($row->nominal, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="small fw-bold">
+                                        @foreach(explode(',', $row->jenis) as $jenis)
+                                            @php 
+                                                $jenis = trim($jenis); 
+                                                $color = match($jenis) {
+                                                    'SPH' => 'text-success',   // hijau
+                                                    'SKT' => 'text-danger',    // merah
+                                                    'INV' => 'text-warning',   // kuning
+                                                    default => 'text-secondary'
+                                                };
+                                            @endphp
+                                            
+                                            <span class="{{ $color }}">{{ $jenis }}</span>
+                                            @if(!$loop->last), @endif
+                                        @endforeach
+                                    </td>
+                                    <td class="small">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') }}</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-start align-items-center gap-2">
+                                            <button class="btn btn-sm btn-outline-info"
+                                                onclick='showDetail(@json($row))' title="Detail Surat">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>                                   
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Belum ada surat.</td>
+                                </tr>
+                            @endforelse 
+                        </tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <div class="mt-3">
+                        {{ $surat->links('pagination::bootstrap-5') }}
+                    </div>
+
+                </div>    
+            </div>
+        </div>  
+    </section>
 
      </div>
 </div>
 
+{{-- modal detail --}}
+@include('content.pimpinan.sphgagal.modal')
+
 {{-- detail modal --}}
- @include('content.pimpinan.sphgagal.modal')
 <script>
-    // Fungsi format tanggal menjadi dd-mm-yyyy
-    function formatTanggal(tgl) {
-        if (!tgl) return '-';
-        const d = new Date(tgl);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}-${month}-${year}`;
+    function showDetail(data) {
+
+        document.getElementById('d_jenis').innerHTML = data.jenis;
+        document.getElementById('d_customer').innerHTML = data.nama_customer;
+        document.getElementById('d_nomor').innerHTML = data.nomor_surat;
+        // Format nominal: 1000000 => 1.000.000
+        let nominalFormatted = data.nominal 
+            ? new Intl.NumberFormat('id-ID').format(data.nominal)
+            : '-';
+
+        document.getElementById('d_nominal').innerHTML = nominalFormatted;
+
+        let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
+        document.getElementById('d_created').innerHTML = tgl;
+
+        // Tambahkan nama user
+        document.getElementById('d_user').innerHTML = data.user_name ?? '-';
+
+        let tglUpdate = data.updated_at 
+            ? new Date(data.updated_at).toLocaleDateString('id-ID')
+            : '-';
+
+        document.getElementById('d_updated_at').innerHTML = tglUpdate;
+
+        new bootstrap.Modal(document.getElementById('detailModal')).show();
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var detailModal = document.getElementById('detailModal');
-        detailModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-
-            fetch(`/pimpinan/sphgagal/detail/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('modalNomorSurat').textContent = data.nomor_surat;
-                    document.getElementById('modalNamaCustomer').textContent = data.nama_customer;
-                    document.getElementById('modalNominal').textContent = "Rp. " + parseFloat(data.nominal).toLocaleString('id-ID');
-
-                    document.getElementById('modalUserName').textContent = data.user_name ?? '-';
-                    document.getElementById('modalStatus').textContent = data.status ?? 'Gagal';
-
-                    // FORMAT TANGGAL 👇
-                    document.getElementById('modalCreatedAt').textContent = formatTanggal(data.created_at);
-                    document.getElementById('modalUpdatedAt').textContent = formatTanggal(data.updated_at);
-                })
-                .catch(err => console.error(err));
-        });
-    });
 </script>

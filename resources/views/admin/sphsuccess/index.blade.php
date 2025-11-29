@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title','Sph Success')
+@section('title','Surat Success')
 {{-- menu yg active --}}
 @section('menuAdminSphSuccess','active')
 {{-- memanggil livewire --}}

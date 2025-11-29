@@ -23,14 +23,6 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// karyawan routes
-Route::middleware(['auth', 'isKaryawan'])->group(function () {
-    Route::view('karyawan/dashboard/index', 'karyawan.dashboard.index')->name('karyawan.dashboard.index');
-    Route::view('karyawan/pengajuan/index', 'karyawan.pengajuan.index')->name('karyawan.pengajuan.index');
-    Route::view('karyawan/daftarsurat/index','karyawan.daftarsurat.index')->name('karyawan.daftarsurat.index');
-    Route::view('karyawan/updatesurat/index','karyawan.updatesurat.index')->name('karyawan.updatesurat.index');
-    Route::view('karyawan/presensi/index','karyawan.presensi.index')->name('karyawan.presensi.index');
-});
 
 // Manager routes
 Route::middleware(['auth', 'isManager'])->group(function () {
@@ -41,9 +33,19 @@ Route::middleware(['auth', 'isManager'])->group(function () {
         Route::get('/', [\App\Http\Controllers\Manager\PengajuanController::class, 'index'])->name('index');
         Route::post('/store', [\App\Http\Controllers\Manager\PengajuanController::class, 'store'])->name('store');
     });
+    // edit data di tampilan pengajuan
+    Route::post('/manager/pengajuan/update/{tabel}/{id}', [PengajuanController::class, 'update']);
+    Route::delete('/manager/pengajuan/delete/{tabel}/{id}', [PengajuanController::class, 'delete']);
+
     // Daftar Surat
     Route::get('manager/daftarsurat', [\App\Http\Controllers\Manager\DaftarSuratController::class, 'index'])->name('manager.daftarsurat.index');
     // update surat
+     Route::get('/manager/surat/status/{table}/{id}/{status}', [UpdateSuratController::class, 'updateStatus'])->name('manager.surat.status');
+    // surat gagal
+    Route::get('manager/suratgagal', [\App\Http\Controllers\Manager\SuratGagalController::class, 'index'])->name('manager.suratgagal.index');
+    Route::post('manager/surat-gagal/update', [\App\Http\Controllers\Manager\SuratGagalController::class, 'update'])->name('manager.suratgagal.update');
+    Route::delete('manager/surat-gagal/delete', [\App\Http\Controllers\Manager\SuratGagalController::class, 'delete'])->name('manager.suratgagal.delete');
+    
     Route::get('manager/update-surat', [App\Http\Controllers\Manager\UpdateSuratController::class, 'index'])->name('manager.updatesurat.index');
     Route::get('manager/update-surat/gagal/{id}', [App\Http\Controllers\Manager\UpdateSuratController::class, 'gagal'])->name('manager.surat.gagal');
     Route::get('manager/update-surat/berhasil/{id}', [App\Http\Controllers\Manager\UpdateSuratController::class, 'berhasil'])->name('manager.surat.berhasil');
@@ -71,9 +73,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     // Daftar Surat
     Route::get('admin/daftarsurat', [\App\Http\Controllers\Admin\DaftarSuratController::class, 'index'])->name('admin.daftarsurat.index');
     // update surat
+    Route::get('/admin/surat/status/{table}/{id}/{status}', [\App\Http\Controllers\Admin\UpdateSuratController::class, 'updateStatus'])->name('admin.surat.status');
+    // edit surat success
+    Route::post('/admin/surat-berhasil/update/{id}', [\App\Http\Controllers\Admin\SphSuccessController::class, 'update'])->name('sphsuccess.update');
+    // edit surat gagal
+    Route::post('/admin/surat-gagal/update/{id}', [\App\Http\Controllers\Admin\SphGagalController::class, 'update'])->name('sphgagal.update');
+    
     Route::get('admin/sph-progres', [App\Http\Controllers\Admin\UpdateSuratController::class, 'index'])->name('admin.sphprogres.index');
-    Route::get('admin/sph-progres/gagal/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'gagal'])->name('admin.surat.gagal');
-    Route::get('admin/sph-progres/berhasil/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'berhasil'])->name('admin.surat.berhasil');
+    // Route::get('admin/sph-progres/gagal/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'gagal'])->name('admin.surat.gagal');
+    // Route::get('admin/sph-progres/berhasil/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'berhasil'])->name('admin.surat.berhasil');
+    // edit surat
+    Route::post('/admin/surat/update', [App\Http\Controllers\Admin\DaftarSuratController::class, 'update'])->name('admin.surat.update');
+    // hapus data
+    Route::delete('/admin/daftar-surat/delete', [App\Http\Controllers\Admin\DaftarSuratController::class, 'destroy'])->name('admin.daftarsurat.delete');
+
+    
+    
     // sph success
     Route::get('admin/sphsuccess', [SphSuccessController::class, 'index'])->name('admin.sphsuccess.index');
     Route::get('admin/sphsuccess/detail/{id}', [SphSuccessController::class, 'detail'])->name('admin.sphsuccess.detail');

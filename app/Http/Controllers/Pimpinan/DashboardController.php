@@ -55,19 +55,25 @@ class DashboardController extends Controller
         $sphMonthly = $formatMonthly($sphMonthly);
         $sktMonthly = $formatMonthly($sktMonthly);
 
+      // ===============================
+        // Hitung jumlah surat sph & inv gagal
         // ===============================
-        // Hitung jumlah surat sph gagal
-        // ===============================
-        $gagal = DB::table('sph_gagal')->count();
+        $sphGagal = DB::table('sph')->where('status', 'gagal')->count();
+        $invGagal = DB::table('inv')->where('status', 'gagal')->count();
+
+        // Total gagal (sph + inv)
+        $gagal = $sphGagal + $invGagal;
+
+       
 
         // ===============================
         // Hitung jumlah user berdasarkan role
         // ===============================
-        $karyawan = DB::table('users')->where('role', 'karyawan')->pluck('id');
+        // $karyawan = DB::table('users')->where('role', 'karyawan')->pluck('id');
         $manager  = DB::table('users')->where('role', 'manager')->pluck('id');
         $admin    = DB::table('users')->where('role', 'admin')->pluck('id');
 
-        $allUsers = $karyawan->merge($manager)->merge($admin)->unique();
+        $allUsers = ($manager)->merge($admin)->unique();
         $totalUserCount = $allUsers->count();
 
         return view('pimpinan.dashboard.index', [

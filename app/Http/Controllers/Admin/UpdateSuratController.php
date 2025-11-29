@@ -5,135 +5,112 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UpdateSuratController extends Controller
 {
+
     public function index(Request $request)
     {
-        $search = $request->search;
+        $perPage = 10;
+        $jenis = $request->jenis ?? 'semua';
+        $kategori = $request->kategori ?? 'semua';
+        $search = $request->search ?? null;
 
-        // =============================
-        // DATA PROGRES (status null)
-        // =============================
-        $data = DB::table('progres_sph')
-            ->when($search, function ($query) use ($search) {
-                $query->where('nama_customer', 'LIKE', "%$search%");
-            })
+        // ================================
+        // Ambil data SPH (SEMUA USER)
+        // ================================
+        $sph = DB::table('sph')
+            ->whereNull('status') // tetap hanya yang status null
+            ->select(
+                'id',
+                'nama_customer',
+                'nomor_surat',
+                'nominal',
+                'created_at',
+                DB::raw("'sph' as sumber_tabel"),
+                DB::raw("'SPH' as jenis_surat")
+            )
+            ->get();
+
+        // ================================
+        // Ambil data INV (SEMUA USER)
+        // ================================
+        $inv = DB::table('inv')
             ->whereNull('status')
+            ->select(
+                'id',
+                'nama_customer',
+                'nomor_surat',
+                'nominal',
+                'created_at',
+                DB::raw("'inv' as sumber_tabel"),
+                DB::raw("'INV' as jenis_surat")
+            )
             ->get();
 
-        // =============================
-        // DATA GAGAL
-        // =============================
-        $gagal = DB::table('sph_gagal')
-            ->when($search, function ($query) use ($search) {
-                $query->where('nama_customer', 'LIKE', "%$search%");
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
+        // ================================
+        // Gabungkan semua
+        // ================================
+        $merged = collect($sph)->merge($inv);
 
-        // =============================
-        // DATA BERHASIL
-        // =============================
-        $berhasil = DB::table('sph')
-            ->when($search, function ($query) use ($search) {
-                $query->where('nama_customer', 'LIKE', "%$search%");
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
+        // ================================
+        // FILTER jenis_surat
+        // ================================
+        if ($jenis && $jenis !== 'semua') {
+            $merged = $merged->filter(function ($item) use ($jenis) {
+                return strtolower($item->jenis_surat) === strtolower($jenis);
+            })->values();
+        }
 
-        return view('admin.sphprogres.index', compact('data','gagal','berhasil','search'));
+        // ================================
+        // SEARCH nama_customer
+        // ================================
+        if ($request->filled('search')) {
+            $merged = $merged->filter(function ($item) use ($request) {
+                return stripos($item->nama_customer, $request->search) !== false;
+            });
+        }
+
+        // Sort hasil akhir
+        $merged = $merged->sortByDesc('created_at')->values();
+
+        // ================================
+        // Pagination Manual
+        // ================================
+        $page = $request->input('page', 1);
+        $itemsPaginated = new LengthAwarePaginator(
+            $merged->slice(($page - 1) * $perPage, $perPage)->values(),
+            $merged->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('admin.sphprogres.index', [
+            'surat' => $itemsPaginated,
+            'jenis_surat' => $request->jenis,
+            'search' => $request->search
+        ]);
     }
 
-
-    // public function detail($id, $type)
-    // {
-    //     if ($type === 'sph') {
-    //         $data = DB::table('sph')
-    //             ->where('id', $id)
-    //             ->first();
-    //     } elseif ($type === 'sph_gagal') {
-    //         $data = DB::table('sph_gagal')
-    //             ->where('id', $id)
-    //             ->first();
-    //     } else {
-    //         return response()->json(['error' => 'Invalid type'], 400);
-    //     }
-
-    //     if (!$data) {
-    //         return response()->json(['error' => 'Data tidak ditemukan'], 404);
-    //     }
-
-    //     return response()->json($data);
-    // }
-
-
-
-    public function gagal($id)
+    public function updateStatus($table, $id, $status)
     {
-        // Ambil data TANPA FILTER user_id
-        $row = DB::table('progres_sph')
+        if (!in_array($table, ['sph', 'inv'])) {
+            abort(404);
+        }
+
+        DB::table($table)
             ->where('id', $id)
-            ->first();
+            ->update([
+                'status' => $status,
+                'updated_at' => now(),
+            ]);
 
-        if (!$row) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan');
-        }
+        $message = $status === 'gagal'
+            ? ' Surat ditandai sebagai surat GAGAL.'
+            : ' Surat ditandai sebagai surat BERHASIL.';
 
-        // Cek nomor_surat unik
-        $exists = DB::table('sph_gagal')->where('nomor_surat', $row->nomor_surat)->exists();
-        if ($exists) {
-            return redirect()->back()->with('error', 'Nomor surat sudah ada di SPH Gagal');
-        }
-
-        DB::table('sph_gagal')->insert([
-            'nomor_surat'   => $row->nomor_surat,
-            'nama_customer' => $row->nama_customer,
-            'nominal'       => $row->nominal,
-            'user_id'       => $row->user_id, 
-            'update'        => now(),
-            'created_at'    => $row->created_at,
-            'updated_at'    => now(),
-        ]);
-
-        DB::table('progres_sph')->where('id', $id)->update([
-            'status' => 'gagal'
-        ]);
-
-        return redirect()->back()->with('success', 'Berhasil ditandai sebagai gagal');
-    }
-
-
-    public function berhasil($id)
-    {
-        $row = DB::table('progres_sph')
-            ->where('id', $id)
-            ->first();
-
-        if (!$row) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan');
-        }
-
-        // Cek nomor unik
-        $exists = DB::table('sph')->where('nomor_surat', $row->nomor_surat)->exists();
-        if ($exists) {
-            return redirect()->back()->with('error', 'Nomor surat sudah ada di SPH Berhasil');
-        }
-
-        DB::table('sph')->insert([
-            'nomor_surat'   => $row->nomor_surat,
-            'nama_customer' => $row->nama_customer,
-            'nominal'       => $row->nominal,
-            'user_id'       => $row->user_id,
-            'update'        => now(),
-            'created_at'    => $row->created_at,
-            'updated_at'    => now(),
-        ]);
-
-        DB::table('progres_sph')->where('id', $id)->update([
-            'status' => 'berhasil'
-        ]);
-
-        return redirect()->back()->with('success', 'Berhasil ditandai sebagai surat berhasil');
+        return back()->with('success', $message);
     }
 }

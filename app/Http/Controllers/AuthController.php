@@ -14,11 +14,16 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // ✅ Validasi input
+        // validasi input
         $request->validate([
-            'user_id' => 'required|exists:users,user_id',
+            'user_id'  => 'required|exists:users,user_id',
             'password' => 'required',
+        ], [
+            'user_id.required'  => 'User ID tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
+            'user_id.exists'    => 'User ID tidak ditemukan',
         ]);
+
 
         // ✅ Login berdasarkan user_id dan password
         if (Auth::attempt(['user_id' => $request->user_id, 'password' => $request->password])) {

@@ -1,57 +1,71 @@
-<!-- Modal Bootstrap 5 -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="detailModalLabel">Detail SPH</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
 
-      <div class="modal-body">
-        <!-- Data akan dimasukkan via AJAX -->
-        <table class="table table-borderless align-middle">
-            <tr>
-                <th class="text-start">Nomor Surat</th>
-                <td class="text-center" style="width: 10px;">:</td>
-                <td id="modalNomorSurat" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Nama Customer</th>
-                <td class="text-center">:</td>
-                <td id="modalNamaCustomer" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Nominal</th>
-                <td class="text-center">:</td>
-                <td id="modalNominal" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Dibuat</th>
-                <td class="text-center">:</td>
-                <td id="modalCreatedAt" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Nama User</th>
-                <td class="text-center">:</td>
-                <td id="modalUserName" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Diupdate</th>
-                <td class="text-center">:</td>
-                <td id="modalUpdatedAt" class="text-start"></td>
-            </tr>
-            <tr>
-                <th class="text-start">Status</th>
-                <td class="text-center">:</td>
-                <td id="modalStatus" class="text-start"></td>
-            </tr>
-        </table>
-      </div>
 
+<div class="modal fade" id="detailModal">
+    <div class="modal-dialog modal-dialog-centered modal-md" style="max-width: 550px;">
+        <div class="modal-content shadow">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Detail Surat</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="row">
+
+                    <!-- Detail Surat -->
+                    <div class="col-12">
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Jenis Surat</div>
+                            <div class="col-7">: <span id="d_jenis"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Nama Customer</div>
+                            <div class="col-7">: <span id="d_customer"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Nomor Surat</div>
+                            <div class="col-7">: <span id="d_nomor"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Nominal</div>
+                            <div class="col-7">: Rp. <span id="d_nominal"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Tanggal Dibuat</div>
+                            <div class="col-7">: <span id="d_created"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Tanggal Update</div>
+                            <div class="col-7">: <span id="d_updated_at"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Status</div>
+                            <div class="col-7">: <span id="d_status">Gagal</span></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-5 fw-bold">Nama User</div>
+                            <div class="col-7">: <span id="d_user"></span></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm small" data-bs-dismiss="modal">Tutup</button>
       </div>
-
+        </div>
     </div>
-  </div>
 </div>
+
+

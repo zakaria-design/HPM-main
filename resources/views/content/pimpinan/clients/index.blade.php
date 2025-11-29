@@ -8,7 +8,7 @@
                     <!-- Title -->
                     <div class="col-sm-6">
                         <h4 class="text-primary">
-                            <i class="fas fa-users"></i> @yield('title')
+                            <i class="fas fa-users ps-3"></i> @yield('title')
                         </h4>
                     </div>
 
@@ -18,7 +18,7 @@
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item">
                                     <a href="#">
-                                        <i class="fas fa-user-tie"></i> Pimpinan
+                                        <i class="fas fa-user-tie ps-3"></i> Pimpinan
                                     </a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">

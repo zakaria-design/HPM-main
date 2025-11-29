@@ -4,14 +4,14 @@
         <section class="content-header pt-0 mt-0 pt-md-5 mt-md-5">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 ps-3">
                         <h4 class="text-primary">
                             <i class="fas fa-user-plus me-1"></i>
                             @yield('title')
                         </h4>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 ps-3">
                         <ol class="breadcrumb float-sm-end">
                             <li class="breadcrumb-item">
                                 <a href="#">
@@ -30,10 +30,12 @@
 
 
 
-            <div>
-        <button class="btn btn-primary ml-3 mb-3 small btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
-            <i class="bi bi-person-plus"></i> Tambah User
-        </button>
+        <div>
+            <div class="ps-3">
+                <button class="btn btn-primary ml-3 mb-3 small btn-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
+                    <i class="bi bi-person-plus"></i> Tambah User
+                </button>
+            </div>
 
                 
                     <div class="table-responsive">
@@ -43,7 +45,7 @@
                                         <th class="ps-5">No</th>
                                         <th><i class="fas fa-sort-alpha-up mr-1 text-primary"></i> Nama User</th>
                                         <th><i class="fas fa-user mr-1 text-primary"></i> User ID</th>
-                                        <th><i class="fas fa-mail-bulk mr-1 text-primary"></i>Email</th>
+                                        <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Email</th>
                                         <th><i class="fas fa-phone mr-1 text-primary"></i> No hp</th>
                                         <th><i class="fas fa-tools mr-1 text-primary"></i> Aksi</th>
                                     </tr>
