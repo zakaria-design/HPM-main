@@ -29,7 +29,7 @@
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
-        "DB_URL": "postgresql://postgres:[I6en3CdvflEKhsKc]@db.sanxakuzpzmmjuoozhsh.supabase.co:5432/postgres",
+        "DB_URL": "postgresql://postgres:I6en3CdvflEKhsKc@db.sanxakuzpzmmjuoozhsh.supabase.co:5432/postgres",
         "DB_CONNECTION": "pgsql",
         "DB_HOST": "db.sanxakuzpzmmjuoozhsh.supabase.co",
         "DB_PORT": "5432",
