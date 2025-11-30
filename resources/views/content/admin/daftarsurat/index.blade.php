@@ -28,9 +28,9 @@
             </div>
         </section>
 
-        <div class="mb-3 px-3">
+        {{-- <div class="mb-3 px-3">
             <form method="GET" action="" class="d-flex align-items-center gap-2">
-                {{-- Filter Bulan --}}
+                
                 <select name="bulan" class="form-select w-auto" onchange="this.form.submit()">
                     <option value="">Semua Bulan</option>
                     @for ($b = 1; $b <= 12; $b++)
@@ -40,7 +40,7 @@
                     @endfor
                 </select>
 
-                {{-- Filter Tahun --}}
+               
                 <select name="tahun" class="form-select w-auto" onchange="this.form.submit()">
                     <option value="">Semua Tahun</option>
                     @for ($t = 2020; $t <= now()->year; $t++)
@@ -50,14 +50,14 @@
                     @endfor
                 </select>
 
-                {{-- Tombol Export di ujung --}}
+             
                 <a href="{{ route('admin.daftarsurat.export', request()->query()) }}" 
                 class="btn btn-outline-success">
                 <i class="fas fa-file-excel"></i>
                 </a>
 
             </form>
-        </div>
+        </div> --}}
 
 
     <section class="content">
