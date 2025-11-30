@@ -35,7 +35,7 @@
 
           <section class="content-header">
             <div>
-                <div class=" mb-3 ml-3 col-10 col-md-4">
+                <div class=" mb-3 ml-3 col-10 col-md-4 ps-4">
                         <form action="" method="GET" class="input-group">
                             <input 
                                 type="text" 

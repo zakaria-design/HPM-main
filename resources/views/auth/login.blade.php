@@ -51,8 +51,8 @@
         width: 100%;
         padding: 0.5rem 0.75rem;
         margin-bottom: 1rem;
-        border-radius: 0.25rem;
-        border: 1px solid #ccc;
+        /* border-radius: 0.25rem; */
+        /* border: 1px solid #ccc; */
         box-sizing: border-box;
         font-size: 1rem;
         transition: border-color 0.2s;
@@ -134,7 +134,7 @@
 
         <!-- Bagian kanan: form -->
         <div class="col-md-6">
-            <div class="card p-4 shadow-sm">
+            <div class=" p-4">
                 <h1 class="text-center mb-4">Login</h1>
 
                 <form action="" method="POST">

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Exports\DaftarSuratExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class DaftarSuratController extends Controller
@@ -83,6 +85,25 @@ class DaftarSuratController extends Controller
         $all = $sph->merge($inv)->merge($skt)
             ->sortByDesc('created_at')
             ->values();
+
+
+        // filter pertahun dan bulan
+           $bulan = $request->bulan;
+            $tahun = $request->tahun;
+
+            if ($bulan) {
+                $all = $all->filter(function ($item) use ($bulan) {
+                    return \Carbon\Carbon::parse($item->created_at)->month == $bulan;
+                })->values();
+            }
+
+            if ($tahun) {
+                $all = $all->filter(function ($item) use ($tahun) {
+                    return \Carbon\Carbon::parse($item->created_at)->year == $tahun;
+                })->values();
+            }
+
+
 
         // ============================
         // 🔍 FILTER JENIS SURAT
@@ -222,6 +243,90 @@ class DaftarSuratController extends Controller
 
         return back()->with('success', 'Data berhasil dihapus!');
     }
+
+    // eksport data
+ public function exportExcel(Request $request)
+{
+    $users = DB::table('users')
+        ->select('user_id', 'name')
+        ->get()
+        ->keyBy('user_id');
+
+    $sph = DB::table('sph')
+        ->join('users', 'sph.user_id', '=', 'users.user_id')
+        ->select(
+            'sph.user_id',
+            'users.name as user_name',
+            'sph.nama_customer',
+            'sph.nomor_surat',
+            'sph.nominal',
+            'sph.status',
+            'sph.updated_at',
+            'sph.created_at',
+            DB::raw('"SPH" as jenis')
+        )
+        ->where('sph.status', 'berhasil')
+        ->get();
+
+    $inv = DB::table('inv')
+        ->join('users', 'inv.user_id', '=', 'users.user_id')
+        ->select(
+            'inv.user_id',
+            'users.name as user_name',
+            'inv.nama_customer',
+            'inv.nomor_surat',
+            'inv.nominal',
+            'inv.status',
+            'inv.updated_at',
+            'inv.created_at',
+            DB::raw('"INV" as jenis')
+        )
+        ->where('inv.status', 'berhasil')
+        ->get();
+
+    $skt = DB::table('skt')
+        ->join('users', 'skt.user_id', '=', 'users.user_id')
+        ->select(
+            'skt.user_id',
+            'users.name as user_name',
+            'skt.nama_customer',
+            'skt.nomor_surat',
+            DB::raw('NULL as nominal'),
+            DB::raw('NULL as status'),
+            'skt.created_at',
+            'skt.updated_at',
+            DB::raw('"SKT" as jenis')
+        )
+        ->get();
+
+    $all = $sph->merge($inv)->merge($skt)->sortByDesc('created_at')->values();
+
+    // 🔍 Filter JENIS
+    if ($request->jenis && $request->jenis !== 'semua') {
+        $all = $all->filter(fn($i) => strtolower($i->jenis) === strtolower($request->jenis))->values();
+    }
+
+    // 🔍 Filter BULAN
+    $bulan = $request->bulan;
+    $tahun = $request->tahun;
+
+    if ($bulan) {
+        $all = $all->filter(function ($item) use ($bulan) {
+            return \Carbon\Carbon::parse($item->created_at)->month == $bulan;
+        })->values();
+    }
+
+    // 🔍 Filter TAHUN
+    if ($tahun) {
+        $all = $all->filter(function ($item) use ($tahun) {
+            return \Carbon\Carbon::parse($item->created_at)->year == $tahun;
+        })->values();
+    }
+
+    return Excel::download(new DaftarSuratExport($all), 'daftar-surat.xlsx');
+}
+
+
 
 
 }

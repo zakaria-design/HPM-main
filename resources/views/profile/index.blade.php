@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Remix Icon CSS -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 </head>
@@ -15,7 +16,7 @@
 
 <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-10">
     {{-- Judul --}}
-    <h2 class="text-2xl font-bold mb-6 text-center">👤 Edit Profil</h2>
+    <h2 class="text-2xl font-bold mb-6 mt-5 text-center text-blue-600"><i class="fas fa-user-edit"></i> Edit Profil</h2>
 
     {{-- Tombol Kembali --}}
     <div class="mb-6">
@@ -47,7 +48,7 @@
         @method('PUT')
 
         <!-- Foto Profil -->
-        <div class="flex flex-col items-center gap-2">
+        {{-- <div class="flex flex-col items-center gap-2">
             <label class="block text-sm font-medium text-gray-700">Foto Profil</label>
             @if($user->foto)
                 <img src="{{ asset('foto_profil/' . $user->foto) }}" 
@@ -60,7 +61,7 @@
             @endif
             <input type="file" name="foto" class="block w-full mt-2 border rounded p-2 text-sm">
             @error('foto') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
+        </div> --}}
 
         <!-- Nama -->
        <!-- Nama (readonly) -->

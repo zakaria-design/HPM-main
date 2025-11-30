@@ -107,12 +107,16 @@
                                     </td>
                                 <td class="small">Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-info"
-                                        onclick='showDetail(@json($item))' title="Detail Surat">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                    <span> | </span>
-                                    <button 
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        
+                                        <!-- Detail -->
+                                        <button class="btn btn-sm btn-outline-info"
+                                            onclick='showDetail(@json($item))' title="Detail Surat">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                        <span>|</span>
+                                        <!-- Edit -->
+                                        <button 
                                             class="btn btn-sm btn-outline-primary"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEdit"
@@ -124,7 +128,23 @@
                                             title="Edit Surat">
                                             <i class="fas fa-edit"></i>
                                         </button>
+                                        <span>|</span>
+                                        <!-- Delete -->
+                                        <form action="{{ route('admin.suratgagal.destroy', $item->id) }}" 
+                                            method="POST" 
+                                            onsubmit="return confirm('Yakin ingin hapus data ini?')"
+                                            style="margin: 0;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="jenis" value="{{ $item->jenis }}">
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
                                 </td>
+
                             </tr>
                         @empty
                             <tr>

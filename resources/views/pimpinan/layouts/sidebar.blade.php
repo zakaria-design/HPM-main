@@ -7,7 +7,7 @@
         style="width: 40px; height: 40px; object-fit: cover;" 
         alt="hppm">
 
-    <h5 class="ml-2 hide-when-collapse" style="margin-top: 7px;">HPM</h5>
+    <h5 class="ml-2 hide-when-collapse ps-1" style="margin-top: 7px;">HPM</h5>
 </div>
 
 

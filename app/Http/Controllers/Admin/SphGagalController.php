@@ -154,35 +154,55 @@ class SphGagalController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    // Validasi
-    $request->validate([
-        'nama_customer' => 'required|string|max:255',
-        'nominal' => 'required|numeric',
-        'status' => 'nullable|string', // ubah: boleh null
-        'jenis' => 'required|string', // SPH / INV
-    ]);
+    {
+        // Validasi
+        $request->validate([
+            'nama_customer' => 'required|string|max:255',
+            'nominal' => 'required|numeric',
+            'status' => 'nullable|string', // ubah: boleh null
+            'jenis' => 'required|string', // SPH / INV
+        ]);
 
-    // Jika value status kosong => jadikan null
-    $status = $request->status === "" ? null : $request->status;
+        // Jika value status kosong => jadikan null
+        $status = $request->status === "" ? null : $request->status;
 
-    // Data yang mau diupdate
-    $dataUpdate = [
-        'nama_customer' => $request->nama_customer,
-        'nominal' => $request->nominal,
-        'status' => $status,
-        'updated_at' => now(),
-    ];
+        // Data yang mau diupdate
+        $dataUpdate = [
+            'nama_customer' => $request->nama_customer,
+            'nominal' => $request->nominal,
+            'status' => $status,
+            'updated_at' => now(),
+        ];
 
-    // Tentukan tabel
-    if ($request->jenis == "SPH") {
-        DB::table('sph')->where('id', $id)->update($dataUpdate);
-    } else {
-        DB::table('inv')->where('id', $id)->update($dataUpdate);
+        // Tentukan tabel
+        if ($request->jenis == "SPH") {
+            DB::table('sph')->where('id', $id)->update($dataUpdate);
+        } else {
+            DB::table('inv')->where('id', $id)->update($dataUpdate);
+        }
+
+        return redirect()->back()->with('success', 'Data berhasil diperbarui!');
     }
 
-    return redirect()->back()->with('success', 'Data berhasil diperbarui!');
-}
+    public function destroy(Request $request, $id)
+    {
+        // jenis = SPH atau INV
+        $jenis = $request->jenis;
+
+        if (!$jenis) {
+            return redirect()->back()->with('error', 'Jenis surat tidak ditemukan!');
+        }
+
+        // Tentukan tabel berdasarkan jenis
+        if ($jenis == "SPH") {
+            DB::table('sph')->where('id', $id)->delete();
+        } else {
+            DB::table('inv')->where('id', $id)->delete();
+        }
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus!');
+    }
+
 
 
 }

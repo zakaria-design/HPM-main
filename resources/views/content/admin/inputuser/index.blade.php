@@ -74,7 +74,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button class="btn btn-sm btn-outline-danger" title="Hapus User">
-                                                        <i class="bi bi-trash"></i>
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
                                             </td>

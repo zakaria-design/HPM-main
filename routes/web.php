@@ -7,6 +7,7 @@ use App\Http\Controllers\DaftarSuratController;
 use App\Http\Controllers\Admin\SphGagalController;
 use App\Http\Controllers\Admin\InputUserController;
 use App\Http\Controllers\Admin\SphSuccessController;
+use App\Http\Controllers\HalamanExportController;
 use App\Http\Controllers\Pimpinan\ClientsController;
 use App\Http\Controllers\Manager\DashboardController;
 use App\Http\Controllers\Manager\PengajuanController;
@@ -80,12 +81,16 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::post('/admin/surat-gagal/update/{id}', [\App\Http\Controllers\Admin\SphGagalController::class, 'update'])->name('sphgagal.update');
     
     Route::get('admin/sph-progres', [App\Http\Controllers\Admin\UpdateSuratController::class, 'index'])->name('admin.sphprogres.index');
-    // Route::get('admin/sph-progres/gagal/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'gagal'])->name('admin.surat.gagal');
-    // Route::get('admin/sph-progres/berhasil/{id}', [App\Http\Controllers\Admin\UpdateSuratController::class, 'berhasil'])->name('admin.surat.berhasil');
     // edit surat
     Route::post('/admin/surat/update', [App\Http\Controllers\Admin\DaftarSuratController::class, 'update'])->name('admin.surat.update');
     // hapus data
     Route::delete('/admin/daftar-surat/delete', [App\Http\Controllers\Admin\DaftarSuratController::class, 'destroy'])->name('admin.daftarsurat.delete');
+    // hapus surat gagal
+    Route::delete('/admin/sph-gagal/{id}', [SphGagalController::class, 'destroy'])->name('admin.suratgagal.destroy');
+    // halaman export
+    Route::get('/admin/halaman-export', [HalamanExportController::class, 'index'])->name('admin.halaman.export');
+    // eksport data
+    Route::get('/admin/daftar-surat/export', [App\Http\Controllers\Admin\DaftarSuratController::class, 'exportExcel'])->name('admin.daftarsurat.export');
 
     
     

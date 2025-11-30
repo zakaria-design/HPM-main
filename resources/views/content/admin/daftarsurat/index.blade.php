@@ -22,14 +22,45 @@
                                 @yield('title')
                             </li>
                         </ol>
-                    </div>
+
+                   </div>
                 </div>
             </div>
         </section>
 
+        <div class="mb-3 px-3">
+            <form method="GET" action="" class="d-flex align-items-center gap-2">
+                {{-- Filter Bulan --}}
+                <select name="bulan" class="form-select w-auto" onchange="this.form.submit()">
+                    <option value="">Semua Bulan</option>
+                    @for ($b = 1; $b <= 12; $b++)
+                        <option value="{{ $b }}" {{ request('bulan') == $b ? 'selected' : '' }}>
+                            {{ DateTime::createFromFormat('!m', $b)->format('F') }}
+                        </option>
+                    @endfor
+                </select>
+
+                {{-- Filter Tahun --}}
+                <select name="tahun" class="form-select w-auto" onchange="this.form.submit()">
+                    <option value="">Semua Tahun</option>
+                    @for ($t = 2020; $t <= now()->year; $t++)
+                        <option value="{{ $t }}" {{ request('tahun') == $t ? 'selected' : '' }}>
+                            {{ $t }}
+                        </option>
+                    @endfor
+                </select>
+
+                {{-- Tombol Export di ujung --}}
+                <a href="{{ route('admin.daftarsurat.export', request()->query()) }}" 
+                class="btn btn-outline-success">
+                <i class="fas fa-file-excel"></i>
+                </a>
+
+            </form>
+        </div>
 
 
-            <section class="content">
+    <section class="content">
         <div>
       <!-- Default box -->
       <div>
@@ -55,6 +86,7 @@
                     </select>
                 </form>
 
+                
                 {{-- Dropdown Kategori --}}
                 <form method="GET" action="" class="w-100 w-md-auto">
                     <select name="kategori" class="form-select" onchange="this.form.submit()">
