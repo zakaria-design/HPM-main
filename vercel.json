@@ -29,14 +29,11 @@
         "CACHE_DRIVER": "array",
         "LOG_CHANNEL": "stderr",
         "SESSION_DRIVER": "cookie",
-        "DB_URL": "postgresql://postgres:I6en3CdvflEKhsKc@db.sanxakuzpzmmjuoozhsh.supabase.co:5432/postgres",
-        "DB_CONNECTION": "pgsql",
-        "DB_HOST": "db.sanxakuzpzmmjuoozhsh.supabase.co",
-        "DB_PORT": "5432",
-        "DB_DATABASE": "postgres",
-        "DB_USERNAME": "postgres",
-        "DB_PASSWORD": "I6en3CdvflEKhsKc",
-        "DB_SSLMODE": "require"
+        "DB_CONNECTION": "mysql",
+        "DB_HOST": "6hujhi.h.filess.io",
+        "DB_PORT": "61002",
+        "DB_DATABASE": "HPM_capletter",
+        "DB_USERNAME": "HPM_capletter"
 
     }
 }
