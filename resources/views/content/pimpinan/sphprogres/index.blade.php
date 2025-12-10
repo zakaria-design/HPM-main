@@ -178,6 +178,11 @@
         let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
         document.getElementById('d_created').innerHTML = tgl;
 
+        // nama marketing
+        document.getElementById('d_marketing').innerHTML =
+        (data.marketing ?? '').trim() !== '' ? data.marketing : '-';
+
+
         // Tambahkan nama user
         document.getElementById('d_user').innerHTML = data.user_name ?? '-';
 

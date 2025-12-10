@@ -89,8 +89,10 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::delete('/admin/sph-gagal/{id}', [SphGagalController::class, 'destroy'])->name('admin.suratgagal.destroy');
     // halaman export
     Route::get('/admin/halaman-export', [HalamanExportController::class, 'index'])->name('admin.halaman.export');
-    // eksport data
+    // eksport daftar surat
     Route::get('/admin/daftar-surat/export', [App\Http\Controllers\Admin\DaftarSuratController::class, 'exportExcel'])->name('admin.daftarsurat.export');
+    // eksport surat gagal
+      Route::get('/admin/surat-gagal/export', [App\Http\Controllers\Admin\SphGagalController::class, 'exportExcel'])->name('admin.suratgagal.export');
 
     
     

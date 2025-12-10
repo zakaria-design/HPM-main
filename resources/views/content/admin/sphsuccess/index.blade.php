@@ -79,6 +79,7 @@
                             <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor Surat</th>
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                             <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                            <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                             <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                             <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                         </tr>
@@ -104,6 +105,13 @@
                                             <span class="{{ $color }}">{{ $jenis }}</span>
                                             @if(!$loop->last), @endif
                                         @endforeach
+                                    </td>
+                                <td class="small">
+                                        @if($item->marketing)
+                                            {{ $item->marketing }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                 <td class="small">Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                 <td>
@@ -170,6 +178,7 @@
         // Tambahkan nama user
         document.getElementById('d_user').innerHTML = data.user_name ?? '-';
 
+
         let tglUpdate = data.updated_at 
             ? new Date(data.updated_at).toLocaleDateString('id-ID')
             : '-';
@@ -201,6 +210,10 @@
 
         // Tambahkan nama user
         document.getElementById('d_user').innerHTML = data.user_name ?? '-';
+
+        // nama marketing
+        document.getElementById('d_marketing').innerHTML =
+        (data.marketing ?? '').trim() !== '' ? data.marketing : '-';
 
         let tglUpdate = data.updated_at 
             ? new Date(data.updated_at).toLocaleDateString('id-ID')

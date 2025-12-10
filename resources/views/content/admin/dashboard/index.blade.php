@@ -80,6 +80,7 @@
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                             <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                             <th><i class="fas fa-user-tag mr-1 text-primary"></i> User</th>
+                            <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,6 +106,13 @@
                                         @endforeach
                                     </td>
                                 <td class="small">{{ $item->user_name ?? '-' }}</td>
+                                <td class="small">
+                                    @if($item->marketing)
+                                        {{ $item->marketing }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>

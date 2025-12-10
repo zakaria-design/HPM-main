@@ -50,6 +50,11 @@
                         </div>
 
                         <div class="row mb-2">
+                            <div class="col-5 fw-bold">Nama Marketing</div>
+                            <div class="col-7">: <span id="d_marketing"></span></div>
+                        </div>
+
+                        <div class="row mb-2">
                             <div class="col-5 fw-bold">Nama User</div>
                             <div class="col-7">: <span id="d_user"></span></div>
                         </div>

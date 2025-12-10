@@ -92,6 +92,7 @@
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                                <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                                 <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
                                 <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                             </tr>
@@ -124,6 +125,13 @@
                                             <span class="{{ $color }}">{{ $jenis }}</span>
                                             @if(!$loop->last), @endif
                                         @endforeach
+                                    </td>
+                                    <td class="small">
+                                        @if($row->marketing)
+                                             {{ $row->marketing }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                     <td class="small">{{ \Carbon\Carbon::parse($row->created_at)->format('d/m/Y') }}</td>
                                     <td class="text-center">

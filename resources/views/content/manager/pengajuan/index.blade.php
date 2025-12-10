@@ -106,6 +106,7 @@
                                         data-jenis="{{ $p->jenis }}"
                                         data-nomor="{{ $p->nomor_surat }}"
                                         data-nama="{{ $p->nama_customer }}"
+                                        data-marketing="{{ $p->marketing }}"
                                         data-nominal="{{ $p->nominal }}"
                                         title="Edit Data">
 

@@ -91,6 +91,7 @@
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                                <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                                 <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Update</th>
                                 <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                             </tr>
@@ -124,6 +125,13 @@
                                             @if(!$loop->last), @endif
                                         @endforeach
                                     </td>
+                                    <td class="small">
+                                        @if($row->marketing)
+                                             {{ $row->marketing }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td class="small">{{ \Carbon\Carbon::parse($row->updated_at)->format('d/m/Y') }}</td>                                  
                                     <td>
                                         <button class="btn btn-outline-success btn-sm"
@@ -134,6 +142,7 @@
                                                 data-nomor="{{ $row->nomor_surat }}"
                                                 data-nama="{{ $row->nama_customer }}"
                                                 data-nominal="{{ $row->nominal }}"
+                                                data-marketing="{{ $row->marketing }}"
                                                 data-status="{{ $row->status }}"
                                                 title="Edit Data">
                                             <i class="fas fa-edit"></i>

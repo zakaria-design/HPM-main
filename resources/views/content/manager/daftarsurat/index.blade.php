@@ -100,6 +100,7 @@
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
+                                <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                                 <th><i class="far fa-calendar-alt mr-1 text-primary"></i> Tanggal</th>
                             </tr>
                         </thead>
@@ -128,6 +129,13 @@
                                     <td class="small">
                                         @if($p->nominal)
                                             Rp {{ number_format($p->nominal, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="small">
+                                        @if($p->marketing)
+                                             {{ $p->marketing }}
                                         @else
                                             -
                                         @endif

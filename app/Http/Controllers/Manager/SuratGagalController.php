@@ -20,7 +20,7 @@ class SuratGagalController extends Controller
     // INV
     // =========================
     $inv = DB::table('inv')
-        ->select('id','nomor_surat','nama_customer','status','nominal','updated_at', DB::raw("'INV' as jenis_surat"))
+        ->select('id','nomor_surat','nama_customer','marketing','status','nominal','updated_at', DB::raw("'INV' as jenis_surat"))
         ->where('user_id', $userId)
         ->where('status', 'gagal');
 
@@ -39,7 +39,7 @@ class SuratGagalController extends Controller
     // SPH
     // =========================
     $sph = DB::table('sph')
-        ->select('id','nomor_surat','nama_customer','status','nominal','updated_at', DB::raw("'SPH' as jenis_surat"))
+        ->select('id','nomor_surat','nama_customer','marketing','status','nominal','updated_at', DB::raw("'SPH' as jenis_surat"))
         ->where('user_id', $userId)
         ->where('status', 'gagal');
 
@@ -81,6 +81,7 @@ class SuratGagalController extends Controller
         'id' => 'required',
         'jenis_surat' => 'required',
         'nama_customer' => 'required',
+        'marketing' => 'required',
         'nominal' => 'required|numeric',
         'status' => 'nullable',  // ← BUKAN required
     ]);
@@ -93,6 +94,7 @@ class SuratGagalController extends Controller
     DB::table($table)->where('id', $request->id)->update([
         'nama_customer' => $request->nama_customer,
         'nominal' => $request->nominal,
+        'marketing' => $request->marketing,
         'status'      => $status,
     ]);
 

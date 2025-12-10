@@ -22,6 +22,8 @@
                 <label class="mt-2">Nominal</label>
                 <input type="text" name="nominal" id="edit_nominal" class="form-control">
 
+                <label class="mt-2">Nama Marketing</label>
+                <input type="text" name="marketing" id="edit_marketing" class="form-control">
 
                 <label class="mt-2">Status</label>
                 <select name="status" id="edit_status" class="form-control">
@@ -52,13 +54,16 @@
 
         document.getElementById('edit_nama').value    = button.getAttribute('data-nama');
         document.getElementById('edit_nominal').value = button.getAttribute('data-nominal');
+        document.getElementById('edit_marketing').value = button.getAttribute('data-marketing');
         document.getElementById('edit_status').value  = button.getAttribute('data-status');
     });
 </script>
 <script>
 function formatRupiah(angka) {
-    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    angka = angka.toString().split('.')[0];  // buang desimal seperti .00
+    return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
+
 
 // Format saat buka modal
 document.getElementById('editModal').addEventListener('show.bs.modal', function (event) {

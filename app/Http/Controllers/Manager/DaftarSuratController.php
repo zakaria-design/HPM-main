@@ -19,20 +19,20 @@ class DaftarSuratController extends Controller
    $sph = DB::table('sph')
     ->where('user_id', $userId)
     ->where('status', 'berhasil')   // ⬅️ Tambahkan filter status berhasil
-    ->select('nama_customer', 'nomor_surat', 'nominal', 'created_at', DB::raw('"SPH" as jenis'))
+    ->select('nama_customer','marketing', 'nomor_surat', 'nominal', 'created_at', DB::raw('"SPH" as jenis'))
     ->get();
 
     $inv = DB::table('inv')
         ->where('user_id', $userId)
         ->where('status', 'berhasil')   // ⬅️ Tambahkan filter status berhasil
-        ->select('nama_customer', 'nomor_surat', 'nominal', 'created_at', DB::raw('"INV" as jenis'))
+        ->select('nama_customer','marketing', 'nomor_surat', 'nominal', 'created_at', DB::raw('"INV" as jenis'))
         ->get();
 
 
     // Ambil semua SKT untuk user ini
     $skt = DB::table('skt')
         ->where('user_id', $userId)
-        ->select('nama_customer', 'nomor_surat', DB::raw('NULL as nominal'), 'created_at', DB::raw('"SKT" as jenis'))
+        ->select('nama_customer','marketing', 'nomor_surat', DB::raw('NULL as nominal'), 'created_at', DB::raw('"SKT" as jenis'))
         ->get();
 
     // Gabungkan

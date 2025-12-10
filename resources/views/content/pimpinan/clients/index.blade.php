@@ -56,7 +56,7 @@
                         <tr>
                             <th class="ps-5">No</th>
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
-                            <th><i class="fas fa-envelope mr-1 text-primary"></i>Surat</th>
+                            <th><i class="fas fa-envelope mr-1 text-primary"></i> Surat</th>
                         </tr>
                     </thead>
                     <tbody>

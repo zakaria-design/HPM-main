@@ -39,6 +39,14 @@
                         <input type="text" name="nominal" id="nominalInput" class="form-control">
                     </div>
 
+                    {{-- Nama marketing --}}
+                    <div class="mb-3">
+                        <label class="form-label">Nama Marketing</label>
+                        <input type="text" name="marketing"
+                               class="form-control ">
+                       
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">

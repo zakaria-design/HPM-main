@@ -28,7 +28,7 @@
             </div>
         </section>
 
-        {{-- <div class="mb-3 px-3">
+        <div class="mb-3 px-3">
             <form method="GET" action="" class="d-flex align-items-center gap-2">
                 
                 <select name="bulan" class="form-select w-auto" onchange="this.form.submit()">
@@ -52,12 +52,13 @@
 
              
                 <a href="{{ route('admin.daftarsurat.export', request()->query()) }}" 
-                class="btn btn-outline-success">
+                class="btn btn-outline-success"
+                title="Export To Excel">
                 <i class="fas fa-file-excel"></i>
                 </a>
 
             </form>
-        </div> --}}
+        </div>
 
 
     <section class="content">
@@ -126,6 +127,7 @@
                                 <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor surat</th>
                                 <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                                 <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                                <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                                 <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                                 <th><i class="fas fa-tools mr-1 mr-1 text-primary"></i> Aksi</th>
                             </tr>
@@ -151,6 +153,13 @@
                                             <span class="{{ $color }}">{{ $jenis }}</span>
                                             @if(!$loop->last), @endif
                                         @endforeach
+                                    </td>
+                                    <td class="small">
+                                        @if($p->marketing)
+                                            {{ $p->marketing }}
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                     <td class="small">
                                         @if($p->nominal)
@@ -240,6 +249,9 @@
 
         // Tambahkan nama user
         document.getElementById('d_user').innerHTML = data.user_name ?? '-';
+
+        // nama marketing
+        document.getElementById('d_marketing').innerHTML = data.marketing ?? '-';
 
         let tglUpdate = data.updated_at 
             ? new Date(data.updated_at).toLocaleDateString('id-ID')

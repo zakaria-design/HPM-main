@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Exports\DaftarSuratExport;
+use App\Exports\SuratGagalExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -24,6 +27,7 @@ class SphGagalController extends Controller
             'sph.nama_customer',
             'sph.nomor_surat',
             'sph.nominal',
+            'sph.marketing',
             'sph.created_at',
             'sph.updated_at',
             'users.name as user_name',
@@ -45,6 +49,7 @@ class SphGagalController extends Controller
             'inv.nama_customer',
             'inv.nomor_surat',
             'inv.nominal',
+            'inv.marketing',
             'inv.created_at',
             'inv.updated_at',
             'users.name as user_name',
@@ -110,6 +115,7 @@ class SphGagalController extends Controller
                 'sph.nama_customer',
                 'sph.nomor_surat',
                 'sph.nominal',
+                'sph.marketing',
                 'sph.status',
                 'sph.created_at',
                 'sph.updated_at',
@@ -134,6 +140,7 @@ class SphGagalController extends Controller
                 'inv.nama_customer',
                 'inv.nomor_surat',
                 'inv.nominal',
+                'inv.marketing',
                 'inv.status',
                 'inv.created_at',
                 'inv.updated_at',
@@ -202,6 +209,77 @@ class SphGagalController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil dihapus!');
     }
+
+
+        // eksport data
+ public function exportExcel(Request $request)
+{
+    $users = DB::table('users')
+        ->select('user_id', 'name')
+        ->get()
+        ->keyBy('user_id');
+
+    $sph = DB::table('sph')
+        ->join('users', 'sph.user_id', '=', 'users.user_id')
+        ->select(
+            'sph.user_id',
+            'users.name as user_name',
+            'sph.nama_customer',
+            'sph.nomor_surat',
+            'sph.nominal',
+            'sph.marketing',
+            'sph.status',
+            'sph.updated_at',
+            'sph.created_at',
+            DB::raw('"SPH" as jenis')
+        )
+        ->where('sph.status', 'gagal')
+        ->get();
+
+    $inv = DB::table('inv')
+        ->join('users', 'inv.user_id', '=', 'users.user_id')
+        ->select(
+            'inv.user_id',
+            'users.name as user_name',
+            'inv.nama_customer',
+            'inv.nomor_surat',
+            'inv.nominal',
+            'inv.marketing',
+            'inv.status',
+            'inv.updated_at',
+            'inv.created_at',
+            DB::raw('"INV" as jenis')
+        )
+        ->where('inv.status', 'gagal')
+        ->get();
+
+
+    $all = $sph->merge($inv)->sortByDesc('created_at')->values();
+
+    // 🔍 Filter JENIS
+    if ($request->jenis && $request->jenis !== 'semua') {
+        $all = $all->filter(fn($i) => strtolower($i->jenis) === strtolower($request->jenis))->values();
+    }
+
+    // 🔍 Filter BULAN
+    $bulan = $request->bulan;
+    $tahun = $request->tahun;
+
+    if ($bulan) {
+        $all = $all->filter(function ($item) use ($bulan) {
+            return \Carbon\Carbon::parse($item->created_at)->month == $bulan;
+        })->values();
+    }
+
+    // 🔍 Filter TAHUN
+    if ($tahun) {
+        $all = $all->filter(function ($item) use ($tahun) {
+            return \Carbon\Carbon::parse($item->created_at)->year == $tahun;
+        })->values();
+    }
+
+    return Excel::download(new SuratGagalExport($all), 'surat-gagal.xlsx');
+}
 
 
 

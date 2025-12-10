@@ -48,7 +48,7 @@
         @method('PUT')
 
         <!-- Foto Profil -->
-        {{-- <div class="flex flex-col items-center gap-2">
+        <div class="flex flex-col items-center gap-2">
             <label class="block text-sm font-medium text-gray-700">Foto Profil</label>
             @if($user->foto)
                 <img src="{{ asset('foto_profil/' . $user->foto) }}" 
@@ -61,7 +61,7 @@
             @endif
             <input type="file" name="foto" class="block w-full mt-2 border rounded p-2 text-sm">
             @error('foto') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div> --}}
+        </div>
 
         <!-- Nama -->
        <!-- Nama (readonly) -->

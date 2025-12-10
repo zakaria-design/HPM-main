@@ -30,11 +30,43 @@
 
                 </div>
             </div>
+            <p class="text-primary ps-3"><i class="far fa-calendar-times"></i> Surat SPH Dan INV Gagal</p>
         </section>
+        
+        <div class="mb-3 px-3">
+            <form method="GET" action="" class="d-flex align-items-center gap-2">
+                
+                <select name="bulan" class="form-select w-auto" onchange="this.form.submit()">
+                    <option value="">Semua Bulan</option>
+                    @for ($b = 1; $b <= 12; $b++)
+                        <option value="{{ $b }}" {{ request('bulan') == $b ? 'selected' : '' }}>
+                            {{ DateTime::createFromFormat('!m', $b)->format('F') }}
+                        </option>
+                    @endfor
+                </select>
 
+               
+                <select name="tahun" class="form-select w-auto" onchange="this.form.submit()">
+                    <option value="">Semua Tahun</option>
+                    @for ($t = 2020; $t <= now()->year; $t++)
+                        <option value="{{ $t }}" {{ request('tahun') == $t ? 'selected' : '' }}>
+                            {{ $t }}
+                        </option>
+                    @endfor
+                </select>
+
+             
+                <a href="{{ route('admin.suratgagal.export', request()->query()) }}" 
+                class="btn btn-outline-success"
+                title="Export To Excel">
+                <i class="fas fa-file-excel"></i>
+                </a>
+
+            </form>
+        </div>
 
         <section class="content-header">
-            <p class="text-primary ps-3"><i class="far fa-calendar-times"></i> Surat SPH Dan INV Gagal</p>
+            
             <div class="mb-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 px-3">
 
                 {{-- KIRI: Filter + dropdown --}}
@@ -79,6 +111,7 @@
                             <th><i class="fas fa-sort-numeric-down mr-1 text-primary"></i> Nomor Surat</th>
                             <th><i class="fas fa-user mr-1 text-primary"></i> Nama Customer</th>
                             <th><i class="fas fa-mail-bulk mr-1 text-primary"></i> Jenis</th>
+                            <th><i class="fas fa-user-tie mr-1 text-primary"></i> Marketing</th>
                             <th><i class="fas fa-dollar-sign mr-1 text-primary"></i> Nominal</th>
                             <th><i class="fas fa-wrench mr-1 text-primary"></i> Aksi</th>
                         </tr>
@@ -90,21 +123,27 @@
                                 <td class="small">{{ $item->nomor_surat }}</td>
                                 <td class="small">{{ $item->nama_customer }}</td>
                                 <td class="small fw-bold">
-                                        @foreach(explode(',', $item->jenis) as $jenis)
-                                            @php 
-                                                $jenis = trim($jenis); 
-                                                $color = match($jenis) {
-                                                    'SPH' => 'text-success',   // hijau
-                                                    'SKT' => 'text-danger',    // merah
-                                                    'INV' => 'text-warning',   // kuning
-                                                    default => 'text-secondary'
-                                                };
-                                            @endphp
-                                            
+                                    @foreach(explode(',', $item->jenis) as $jenis)
+                                        @php 
+                                            $jenis = trim($jenis); 
+                                            $color = match($jenis) {
+                                                'SPH' => 'text-success',   // hijau
+                                                'SKT' => 'text-danger',    // merah
+                                                'INV' => 'text-warning',   // kuning
+                                                default => 'text-secondary'
+                                             };
+                                        @endphp                                           
                                             <span class="{{ $color }}">{{ $jenis }}</span>
-                                            @if(!$loop->last), @endif
-                                        @endforeach
-                                    </td>
+                                        @if(!$loop->last), @endif
+                                    @endforeach
+                                </td>
+                                <td class="small">
+                                    @if($item->marketing)
+                                        {{ $item->marketing }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td class="small">Rp. {{ number_format($item->nominal, 0, ',', '.') }}</td>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 6px;">
@@ -213,6 +252,11 @@
 
         let tgl = new Date(data.created_at).toLocaleDateString('id-ID');
         document.getElementById('d_created').innerHTML = tgl;
+
+        // nama marketing
+        document.getElementById('d_marketing').innerHTML =
+        (data.marketing ?? '').trim() !== '' ? data.marketing : '-';
+
 
         // Tambahkan nama user
         document.getElementById('d_user').innerHTML = data.user_name ?? '-';

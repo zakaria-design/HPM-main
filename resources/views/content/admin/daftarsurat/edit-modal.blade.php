@@ -54,11 +54,10 @@
 const modalEdit = document.getElementById('modalEdit');
 
 // 🔹 Fungsi format angka → 3.000.000
-function formatRupiah(angka) {
-    if (!angka) return '';
-    angka = angka.toString().replace(/\D/g, '');
-    return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+        function formatRupiah(angka) {
+            angka = angka.toString().split('.')[0];  // buang desimal seperti .00
+            return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
 modalEdit.addEventListener('show.bs.modal', function (event) {
     const button = event.relatedTarget;
@@ -88,8 +87,10 @@ modalEdit.addEventListener('show.bs.modal', function (event) {
 
 // ⬅️ TAMBAHAN: format saat diketik
 document.getElementById("editNominal").addEventListener("input", function () {
-    this.value = formatRupiah(this.value);
+    let angka = this.value.replace(/\./g, ""); // bersihkan titik sebelum format ulang
+    this.value = formatRupiah(angka);
 });
+
 
 // ⬅️ TAMBAHAN: sebelum form dikirim → ubah 3.000.000 menjadi 3000000
 document.querySelector("#modalEdit form").addEventListener("submit", function () {

@@ -31,6 +31,7 @@ class DaftarSuratController extends Controller
         'sph.nama_customer',
         'sph.nomor_surat',
         'sph.nominal',
+        'sph.marketing',
         'sph.updated_at',
         'sph.created_at',
         DB::raw('"SPH" as jenis')
@@ -50,6 +51,7 @@ $inv = DB::table('inv')
         'inv.nama_customer',
         'inv.nomor_surat',
         'inv.nominal',
+        'inv.marketing',
         'inv.updated_at',
         'inv.created_at',
         DB::raw('"INV" as jenis')
@@ -68,6 +70,7 @@ $skt = DB::table('skt')
         'skt.nama_customer',
         'skt.nomor_surat',
         DB::raw('NULL as nominal'),
+        'skt.marketing',
         'skt.created_at',
         DB::raw('"SKT" as jenis')
     )

@@ -27,6 +27,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'no_hp' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:255',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         // Update data teks
@@ -34,6 +35,18 @@ class ProfileController extends Controller
         $user->no_hp = $request->no_hp;
         $user->alamat = $request->alamat;
 
+        // Update foto jika diunggah
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($user->foto && File::exists(public_path('foto_profil/' . $user->foto))) {
+                File::delete(public_path('foto_profil/' . $user->foto));
+            }
+
+            // Simpan foto baru
+            $filename = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('foto_profil'), $filename);
+            $user->foto = $filename;
+        }
 
         $user->save();
 
@@ -41,22 +54,22 @@ class ProfileController extends Controller
     }
 
     public function updatePassword(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
-        ]);
+    $request->validate([
+        'current_password' => 'required',
+        'new_password' => 'required|min:6|confirmed',
+    ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('password_error', 'Password lama salah.');
-        }
-
-        $user->password = bcrypt($request->new_password);
-        $user->save();
-
-        return back()->with('password_success', 'Password berhasil diubah.');
+    if (!Hash::check($request->current_password, $user->password)) {
+        return back()->with('password_error', 'Password lama salah.');
     }
+
+    $user->password = bcrypt($request->new_password);
+    $user->save();
+
+    return back()->with('password_success', 'Password berhasil diubah.');
+}
 
 }

@@ -54,50 +54,52 @@
 
 
 <script>
-const modalEdit = document.getElementById('modalEdit');
+        const modalEdit = document.getElementById('modalEdit');
 
-// 🔹 Fungsi format angka → 3.000.000
-function formatRupiah(angka) {
-    if (!angka) return '';
-    angka = angka.toString().replace(/\D/g, '');
-    return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-modalEdit.addEventListener('show.bs.modal', function (event) {
-    const button = event.relatedTarget;
-
-    document.getElementById('editNama').value = button.getAttribute('data-nama');
-    document.getElementById('editNomor').value = button.getAttribute('data-nomor');
-    document.getElementById('editJenis').value = button.getAttribute('data-jenis');
-
-    const jenis = button.getAttribute('data-jenis');
-
-    // Nominal dan Status (hanya SPH & INV)
-    if (jenis === 'SPH' || jenis === 'INV') {
-        document.getElementById('wrapNominal').style.display = 'block';
-        document.getElementById('wrapStatus').style.display = 'block';
-
-        // ⬅️ TAMBAHAN: format nominal saat modal dibuka
-        const nilaiNominal = button.getAttribute('data-nominal');
-        document.getElementById('editNominal').value = formatRupiah(nilaiNominal);
-
-        document.getElementById('editStatus').value = button.getAttribute('data-status');
-    } else {
-        document.getElementById('wrapNominal').style.display = 'none';
-        document.getElementById('wrapStatus').style.display = 'none';
-    }
-});
+        // 🔹 Fungsi format angka → 3.000.000
+        function formatRupiah(angka) {
+            angka = angka.toString().split('.')[0];  // buang desimal seperti .00
+            return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
 
-// ⬅️ TAMBAHAN: format saat diketik
-document.getElementById("editNominal").addEventListener("input", function () {
-    this.value = formatRupiah(this.value);
-});
+        modalEdit.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
 
-// ⬅️ TAMBAHAN: sebelum form dikirim → ubah 3.000.000 menjadi 3000000
-document.querySelector("#modalEdit form").addEventListener("submit", function () {
-    let input = document.getElementById("editNominal");
-    input.value = input.value.replace(/\./g, ""); 
-});
+            document.getElementById('editNama').value = button.getAttribute('data-nama');
+            document.getElementById('editNomor').value = button.getAttribute('data-nomor');
+            document.getElementById('editJenis').value = button.getAttribute('data-jenis');
+
+            const jenis = button.getAttribute('data-jenis');
+
+            // Nominal dan Status (hanya SPH & INV)
+            if (jenis === 'SPH' || jenis === 'INV') {
+                document.getElementById('wrapNominal').style.display = 'block';
+                document.getElementById('wrapStatus').style.display = 'block';
+
+                // ⬅️ TAMBAHAN: format nominal saat modal dibuka
+                const nilaiNominal = button.getAttribute('data-nominal');
+                document.getElementById('editNominal').value = formatRupiah(nilaiNominal);
+
+                document.getElementById('editStatus').value = button.getAttribute('data-status');
+            } else {
+                document.getElementById('wrapNominal').style.display = 'none';
+                document.getElementById('wrapStatus').style.display = 'none';
+            }
+        });
+
+
+        // ⬅️ TAMBAHAN: format saat diketik
+        document.getElementById("editNominal").addEventListener("input", function () {
+            let angka = this.value.replace(/\./g, ""); // bersihkan titik sebelum format ulang
+            this.value = formatRupiah(angka);
+        });
+
+
+        // ⬅️ TAMBAHAN: sebelum form dikirim → ubah 3.000.000 menjadi 3000000
+        document.querySelector("#modalEdit form").addEventListener("submit", function () {
+            let input = document.getElementById("editNominal");
+            input.value = input.value.replace(/\./g, ""); 
+        });
 </script>
 

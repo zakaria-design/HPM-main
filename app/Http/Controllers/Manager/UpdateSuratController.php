@@ -31,6 +31,7 @@ class UpdateSuratController extends Controller
             'nama_customer',
             'nomor_surat',
             'nominal',
+            'marketing',
             'created_at',
             DB::raw("'sph' as sumber_tabel"),
             DB::raw("'SPH' as jenis_surat")
@@ -48,6 +49,7 @@ class UpdateSuratController extends Controller
             'nama_customer',
             'nomor_surat',
             'nominal',
+            'marketing',
             'created_at',
             DB::raw("'inv' as sumber_tabel"),
             DB::raw("'INV' as jenis_surat")

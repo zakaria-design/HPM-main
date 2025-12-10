@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
+
 
 class PengajuanController extends Controller
 {
@@ -24,6 +26,7 @@ class PengajuanController extends Controller
                     'nama_customer',
                     'nomor_surat',
                     'nominal',
+                    'marketing',
                     'created_at',
                     DB::raw('"SPH" as jenis'),
                     DB::raw('"sph" as sumber_tabel')
@@ -39,6 +42,7 @@ class PengajuanController extends Controller
                     'nama_customer',
                     'nomor_surat',
                     'nominal',
+                    'marketing',
                     'created_at',
                     DB::raw('"INV" as jenis'),
                     DB::raw('"inv" as sumber_tabel')
@@ -54,6 +58,7 @@ class PengajuanController extends Controller
                     'nama_customer',
                     'nomor_surat',
                     DB::raw('NULL as nominal'),
+                    'marketing',
                     'created_at',
                     DB::raw('"SKT" as jenis'),
                     DB::raw('"skt" as sumber_tabel')
@@ -79,16 +84,35 @@ class PengajuanController extends Controller
 
     public function store(Request $request)
         {
-            $request->validate([
+            // Validasi dasar
+           $rules = [
                 'nama_customer' => 'required|string|max:255',
-                'jenis_surat' => 'required',
-                'nominal' => $request->jenis_surat !== 'surat keterangan' 
-                                ? 'required' 
-                                : 'nullable',
-            ]);
+                'jenis_surat'   => 'required',
+                'marketing'     => $request->jenis_surat !== 'surat keterangan' 
+                                    ? 'required'
+                                    : 'nullable',
+                'nominal'       => $request->jenis_surat !== 'surat keterangan'
+                                    ? 'required'
+                                    : 'nullable',
+            ];
+
+            $messages = [
+                'nominal.required' => 'Nominal wajib di isi.',
+            ];
+
+            $validator = Validator::make($request->all(), $rules, $messages);
+
+            if ($validator->fails()) {
+                return back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', '❌ Nominal wajib di isi!');
+            }
+
 
             $nama = strtoupper(trim($request->nama_customer));
             $jenis = $request->jenis_surat;
+            $marketing = $request->marketing;
             $userId = Auth::user()->user_id;
 
             // Mapping tabel & prefix
@@ -151,12 +175,14 @@ class PengajuanController extends Controller
                 'user_id' => $userId,
                 'nama_customer' => $nama,
                 'nomor_surat' => $nomorSurat,
+                'marketing' => $marketing,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];
 
             if ($jenis !== 'surat keterangan') {
                 $data['nominal'] = preg_replace('/[^\d]/', '', $request->nominal);
+                 $data['marketing'] = $request->marketing;
             }
 
             DB::table($table)->insert($data);
@@ -168,7 +194,8 @@ class PengajuanController extends Controller
         {
             $data = [
                 'nama_customer' => $request->nama_customer,
-                'nomor_surat'   => $request->nomor_surat
+                'nomor_surat'   => $request->nomor_surat,
+                'marketing'   => $request->marketing
             ];
 
             // Jika tabel adalah sph atau inv → mereka punya kolom nominal

@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class DaftarSuratExport implements FromCollection, WithHeadings
+class SuratGagalExport implements FromCollection, WithHeadings
 {
     protected $data;
 
@@ -46,5 +46,4 @@ class DaftarSuratExport implements FromCollection, WithHeadings
             'Update Terakhir'
         ];
     }
-    
 }

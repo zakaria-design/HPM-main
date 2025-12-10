@@ -25,6 +25,11 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Nama Marketing</label>
+                <input type="text" class="form-control" id="edit_marketing" name="marketing" required>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Nominal</label>
                 <input type="text" class="form-control" id="edit_nominal" name="nominal">
             </div>
@@ -55,11 +60,13 @@ document.addEventListener('DOMContentLoaded', function () {
         var tabel   = button.getAttribute('data-tabel');
         var nomor   = button.getAttribute('data-nomor');
         var nama    = button.getAttribute('data-nama');
+        var marketing    = button.getAttribute('data-marketing');
         var nominal = button.getAttribute('data-nominal');
 
         // Isi modal
         document.getElementById('edit_nomor').value = nomor;
         document.getElementById('edit_nama').value  = nama;
+        document.getElementById('edit_marketing').value  = marketing;
 
         // Format nominal saat modal dibuka
         if (nominal) {
